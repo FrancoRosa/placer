@@ -1,34 +1,47 @@
 import { faFileAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { getSerialPorts } from "../js/api";
 import NumberInput from "./NumberInput";
 
 const LaserConfig = () => {
+  const [serialPorts, setSerialPorts] = useState([]);
+  const [rectWidth, setRectWidth] = useState();
+  const [rectHeight, setRectHeight] = useState();
+
+  useEffect(() => {
+    getSerialPorts().then((res) => setSerialPorts(res.serial_ports));
+  }, []);
+
   return (
     <div className="container">
       <div className="columns">
         <div className="column">
-          <div className="columns">
-            <NumberInput label="Truck length" placeholder="E.g: 5" />
-            <NumberInput label="Truck width" placeholder="E.g: 5" />
-            <NumberInput label="Truck height" placeholder="E.g: 5" />
-          </div>
-          <div className="columns">
-            <NumberInput label="Antenna from left" placeholder="E.g: 5" />
-            <NumberInput label="Antenna from truck head" placeholder="E.g: 5" />
-          </div>
-          <div className="columns">
-            <NumberInput label="Bay 1 from truck head" placeholder="E.g: 5" />
-            <NumberInput label="Bay 2 from truck head" placeholder="E.g: 5" />
-          </div>
-          <div className="columns">
-            <NumberInput label="EPSG code" placeholder="E.g: 6588" />
-            <div className="column is-flex-direction-column is-flex is-flex-centered">
-              <p className="heading has-text-link">EPSG Reference</p>
-              <a target="blank" className="has-text-white title is-2">
-                <FontAwesomeIcon icon={faFileAlt} />
-              </a>
+          <div className="field">
+            <label htmlFor="" className="label">
+              Serial Port
+            </label>
+            <div className="select">
+              <select>
+                {serialPorts.map((s) => (
+                  <option>{s}</option>
+                ))}
+              </select>
             </div>
+            <button className="button">Connect</button>
           </div>
+          <NumberInput
+            label="Rectangle width (ft)"
+            value={rectWidth}
+            placeholder="E.g: 5"
+            changeHandler={setRectWidth}
+          />
+          <NumberInput
+            label="Rectangle height (ft)"
+            value={rectHeight}
+            placeholder="E.g: 5"
+            changeHandler={setRectHeight}
+          />
           <hr />
         </div>
       </div>

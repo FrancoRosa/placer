@@ -1,4 +1,4 @@
-from helpers import polygon, cvs_to_rows, rgb, rows_to_json, coordinate_distance
+from helpers import available_ports, polygon, cvs_to_rows, rgb, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
 from flask import Flask, request, jsonify, make_response
 from flask_socketio import SocketIO, send
@@ -82,6 +82,16 @@ def get_status():
 def get_waypoints():
     global waypoints
     return send_response({"waypoints": waypoints})
+
+
+@app.route('/api/serial_ports', methods=['get'])
+def get_serial_ports():
+    return send_response({"serial_ports": available_ports()})
+
+
+@app.route('/api/serial_laser', methods=['get'])
+def get_serial_laser():
+    return send_response({"serial_laser": serial_laser()})
 
 
 @app.route('/api/location', methods=['post'])

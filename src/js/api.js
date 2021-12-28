@@ -48,6 +48,13 @@ export const getLocation = async () => {
   return response.data;
 };
 
+export const getSerialPorts = async () => {
+  console.log("... getting serial ports");
+  const url = `${host}/api/serial_ports`;
+  const response = await axios.get(url);
+  return response.data;
+};
+
 export const getWaypoints = async () => {
   console.log("... getting waypoints");
   const url = `${host}/api/waypoints`;
