@@ -19,18 +19,20 @@ const NextPile = ({ index }) => {
   };
 
   useEffect(() => {
-    let distance = Math.abs(center.distY[index]);
-    if (distance > 25) {
-      setProgressColor("is-danger");
-      setProgressValue(1);
-    }
-    if (distance < 15) {
-      setProgressColor("is-warning");
-      setProgressValue(2);
-    }
-    if (distance < 6) {
-      setProgressColor("is-success");
-      setProgressValue(3);
+    if (center.distY !== undefined) {
+      let distance = Math.abs(center.distY[index]);
+      if (distance > 25) {
+        setProgressColor("is-danger");
+        setProgressValue(1);
+      }
+      if (distance < 15) {
+        setProgressColor("is-warning");
+        setProgressValue(2);
+      }
+      if (distance < 6) {
+        setProgressColor("is-success");
+        setProgressValue(3);
+      }
     }
   }, [waypoint.distance]);
 

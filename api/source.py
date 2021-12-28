@@ -125,7 +125,7 @@ def set_location():
 def set_heading():
     global heading
     heading = request.get_json()
-    broadcast({**heading, **location, **truck})
+    broadcast({**heading, **location, **truck, **bay_to_waypoint})
     response = make_response(jsonify({
         "message": True,
     }), 200)
