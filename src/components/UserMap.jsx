@@ -66,8 +66,6 @@ const UserMap = () => {
   const socketListener = () => {
     socket.on("message", (msg) => {
       const parsedMsg = JSON.parse(msg);
-      console.log(parsedMsg);
-
       setCenter(parsedMsg);
       setViewState({
         ...viewState,

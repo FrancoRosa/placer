@@ -1,7 +1,7 @@
 from helpers import polygon, cvs_to_rows, rgb, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
 from flask import Flask, request, jsonify, make_response
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, send
 from flask_cors import CORS
 from os import path
 from platform import system
@@ -61,6 +61,12 @@ def broadcast(val):
     socketio.send(json.dumps(val), broadcast=True)
 
 
+def send_response(payload):
+    response = make_response(jsonify(payload), 200)
+    response.headers["Content-Type"] = "application/json"
+    return response
+
+
 @app.route('/')
 def index():
     return "... source server running on port %s" % port
@@ -69,22 +75,13 @@ def index():
 @app.route('/api/status', methods=['get'])
 def get_status():
     global heading, location
-    response = make_response(jsonify({
-        **heading,
-        **location
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    return send_response({**heading, **location})
 
 
 @app.route('/api/waypoints', methods=['get'])
 def get_waypoints():
     global waypoints
-    response = make_response(jsonify({
-        "waypoints": waypoints,
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    return send_response({"waypoints": waypoints})
 
 
 @app.route('/api/location', methods=['post'])
@@ -114,11 +111,7 @@ def set_location():
             moveLasers(config["truckHei"], laser1dist, laser2dist)
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 
-    response = make_response(jsonify({
-        "message": True,
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    return send_response({"message": True})
 
 
 @app.route('/api/heading', methods=['post'])
@@ -126,11 +119,7 @@ def set_heading():
     global heading
     heading = request.get_json()
     broadcast({**heading, **location, **truck, **bay_to_waypoint})
-    response = make_response(jsonify({
-        "message": True,
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    return send_response({"message": True})
 
 
 @app.route('/api/config', methods=['post'])
@@ -138,25 +127,18 @@ def set_config():
     global config
     config = request.get_json()
     create_projs(config['epsg'])
-    response = make_response(jsonify({
+    return send_response({
         "message": True,
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    })
 
 
 @app.route('/api/bay', methods=['post'])
 def set_ref_bay():
     global ref_bay
     ref_bay = request.get_json()
-    print("###########")
-    print(ref_bay)
-    print("###########")
-    response = make_response(jsonify({
+    return send_response({
         "message": True,
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    })
 
 
 @app.route('/api/waypoint', methods=['post'])
@@ -164,11 +146,9 @@ def set_waypoint():
     global waypoint
     waypoint = request.get_json()
     print('... ', waypoint)
-    response = make_response(jsonify({
+    return send_response({
         "message": True,
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
-    return response
+    })
 
 
 @app.route('/api/file', methods=['post'])
@@ -191,12 +171,10 @@ def process_file():
 
         waypoints = rows_to_json(rows, code)
         rows_processed = len(waypoints)
-    response = make_response(jsonify({
-        "message": message, "rows": rows_processed
-    }), 200)
-    response.headers["Content-Type"] = "application/json"
     processing_file = False
-    return response
+    return send_response({
+        "message": message, "rows": rows_processed
+    })
 
 
 app.run(debug=False, port=port, host='0.0.0.0')

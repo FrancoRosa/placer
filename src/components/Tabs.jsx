@@ -1,4 +1,9 @@
-import { faTools, faMapMarked, faBug } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTools,
+  faMapMarked,
+  faBug,
+  faSun,
+} from "@fortawesome/free-solid-svg-icons";
 import Tab from "./Tab";
 
 const Tabs = () => {
@@ -8,6 +13,7 @@ const Tabs = () => {
         <Tab name="Map" icon={faMapMarked} />
         <Tab name="Config" icon={faTools} />
         <Tab name="Debug" icon={faBug} />
+        <Tab name="Laser" icon={faSun} />
       </ul>
     </div>
   );

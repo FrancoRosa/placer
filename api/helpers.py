@@ -6,6 +6,8 @@ from pyproj import Transformer
 # from serial_servo import servoSerial
 from requests import post
 
+import sys
+import glob
 import openpyxl
 import serial
 
@@ -340,6 +342,28 @@ def rgb(waypoint, bay_to_waypoint):
     ) if 'color' in waypoint[1].keys() else -1
     command = "%s\n" % dumps(rgb_piles)
     rgb_port.write(command.encode())
+
+
+def available_ports():
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(256)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
+
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
 
 
 create_projs('2229')
