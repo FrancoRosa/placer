@@ -60,7 +60,9 @@ const NextPile = ({ index }) => {
           </div>
           <p className="heading has-text-centered">{waypoint.color}</p>
           <p className="title is-3 has-text-centered mt-3 mb-4">
-            {Math.abs(center.distY[index]).toFixed(1)} ft
+            {center.distY !== undefined &&
+              Math.abs(center.distY[index]).toFixed(1)}{" "}
+            ft
           </p>
           <progress
             class={`progress rotate ${progressColor}`}
