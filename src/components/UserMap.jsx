@@ -1,7 +1,12 @@
 import { useStoreActions, useStoreState } from "easy-peasy";
 import DeckGL from "@deck.gl/react";
 import { MapView } from "@deck.gl/core";
-import { BitmapLayer, PolygonLayer, ScatterplotLayer } from "@deck.gl/layers";
+import {
+  BitmapLayer,
+  PolygonLayer,
+  ScatterplotLayer,
+  LineLayer,
+} from "@deck.gl/layers";
 import { StaticMap } from "react-map-gl";
 import { useEffect, useState } from "react";
 import { getWaypoints, setRefWaypoint, socket } from "../js/api";
@@ -40,7 +45,7 @@ const UserMap = () => {
   ]);
   const [lasers, setLasers] = useState([]);
   const [truckBundle, setTruckBundle] = useState([]);
-  const [verticalLine, setVerticalLine] = useState([]);
+  const [verticalLine, setVerticalLine] = useState({});
   const [horizontalLine, setHorizontalLine] = useState([]);
   const [bays, setBays] = useState([
     { lat: 0, lng: 0 },
@@ -85,8 +90,10 @@ const UserMap = () => {
       ]);
 
       setVerticalLine([
-        { lat: parsedMsg.truck[4][0], lng: parsedMsg.truck[4][1] },
-        { lat: parsedMsg.truck[5][0], lng: parsedMsg.truck[5][1] },
+        {
+          from: [parsedMsg.truck[4][1], parsedMsg.truck[4][0]],
+          to: [parsedMsg.truck[5][1], parsedMsg.truck[5][0]],
+        },
       ]);
 
       setHorizontalLine([
@@ -343,6 +350,14 @@ const UserMap = () => {
             getLineColor={colors.lightgreen}
             getLineWidth={0.1}
             getElevation={0.5}
+          />
+          <LineLayer
+            data={verticalLine}
+            widthUnits="meters"
+            getWidth={0.3}
+            getSourcePosition={(d) => d.from}
+            getTargetPosition={(d) => d.to}
+            getColor={[20, 140, 0]}
           />
         </DeckGL>
       </div>
