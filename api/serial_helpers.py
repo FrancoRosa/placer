@@ -1,6 +1,7 @@
 from serial.tools.list_ports import comports
 from json import dumps
 from time import sleep
+from threading import Thread
 import serial
 
 laser_connected = False
@@ -37,6 +38,15 @@ def available_ports():
     return list(map(lambda x: x[0], ports))
 
 
+def send_to_laser(command):
+    global laser_connected
+    if laser_connected:
+        try:
+            laser_port.write(command.encode())
+        except:
+            laser_connected = False
+
+
 def connect_laser():
     global laser_connected, laser_port
     test_command = '{version()}'.encode()
@@ -45,18 +55,21 @@ def connect_laser():
         ports = available_ports()
         for test_port in ports:
             laser_connected = False
-            print("... testing:", test_port)
             laser_port = serial.Serial(test_port, baudrate=38400, timeout=0.5)
             laser_port.write(test_command)
             response = laser_port.readline()
             if test_response in response:
                 laser_connected = True
-                print("... connected", test_port)
-                while True:
-                    print("...sleep")
+                print("... laser connected at:", test_port)
+                while laser_connected:
                     sleep(1)
-            print("...sleep")
             sleep(1)
 
 
-connect_laser()
+def get_laser():
+    global laser_port, laser_connected
+    port = laser_port.port if laser_connected else None
+    return {"connected": laser_connected, "port": port}
+
+
+Thread(target=connect_laser).start()

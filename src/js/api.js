@@ -55,6 +55,20 @@ export const getSerialPorts = async () => {
   return response.data;
 };
 
+export const getLaserStatus = async () => {
+  console.log("... getting serial ports");
+  const url = `${host}/api/serial_laser`;
+  const response = await axios.get(url);
+  return response.data;
+};
+
+export const setLaserConfig = async (payload) => {
+  console.log("... setting laser config");
+  const url = `${host}/api/set_laser_config`;
+  const response = await axios.post(url, payload);
+  return response.data;
+};
+
 export const getWaypoints = async () => {
   console.log("... getting waypoints");
   const url = `${host}/api/waypoints`;
