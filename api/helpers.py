@@ -10,7 +10,7 @@ import sys
 import glob
 import openpyxl
 import serial
-
+from serial.tools.list_ports import comports
 
 print(getcwd())
 
@@ -345,25 +345,8 @@ def rgb(waypoint, bay_to_waypoint):
 
 
 def available_ports():
-    if sys.platform.startswith('win'):
-        ports = ['COM%s' % (i + 1) for i in range(256)]
-    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-        # this excludes your current terminal "/dev/tty"
-        ports = glob.glob('/dev/tty[A-Za-z]*')
-    elif sys.platform.startswith('darwin'):
-        ports = glob.glob('/dev/tty.*')
-    else:
-        raise EnvironmentError('Unsupported platform')
-
-    result = []
-    for port in ports:
-        try:
-            s = serial.Serial(port)
-            s.close()
-            result.append(port)
-        except (OSError, serial.SerialException):
-            pass
-    return result
+    ports = comports()
+    return list(map(lambda x: x[0], ports))
 
 
 create_projs('2229')
