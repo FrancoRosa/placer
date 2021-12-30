@@ -97,14 +97,18 @@ const LaserConfig = () => {
           </div>
           <div className="is-flex is-flex-centered">
             <button
-              onClick={handleSave}
-              className="button is-outlined is-success"
+              onClick={() => setOn(!on)}
+              className={`button is-outlined m-4  + ${
+                on ? "is-success" : "is-danger"
+              }`}
             >
-              Save
+              {on ? "Laser On" : "Laser Off"}
             </button>
             <button
-              onClick={handleSave}
-              className="button is-outlined is-success"
+              onClick={() => setManual(!manual)}
+              className={`button is-outlined m-4  + ${
+                manual ? "is-success" : "is-danger"
+              }`}
             >
               Save
             </button>
