@@ -1,16 +1,11 @@
 from os import getcwd
-from json import dumps
 from time import process_time_ns, sleep, time
 from math import degrees, sin, cos, atan2, sqrt, radians
 from pyproj import Transformer
-# from serial_servo import servoSerial
 from requests import post
 
-import sys
-import glob
 import openpyxl
-import serial
-from serial.tools.list_ports import comports
+
 
 print(getcwd())
 
@@ -317,36 +312,6 @@ def moveLasers(height, laser1, laser2):
     print('======================')
     command = servoCommand(angles)
     # servoSerial.write(command)
-
-
-def rgb(waypoint, bay_to_waypoint):
-    rgb_port = serial.Serial('/dev/ttyS0')
-
-    rgb_piles = [
-        {
-            'distance': 1,
-            'color': 'black'
-        },
-        {
-            'distance': 2,
-            'color': 'black'
-        }
-    ]
-    rgb_piles[0]['distance'] = int(
-        bay_to_waypoint['distance'][0]) if 'color' in waypoint[0].keys() else -1
-    rgb_piles[1]['distance'] = int(
-        bay_to_waypoint['distance'][1]) if 'color' in waypoint[1].keys() else -1
-    rgb_piles[0]['color'] = waypoint[0]['color'].strip(
-    ) if 'color' in waypoint[0].keys() else -1
-    rgb_piles[1]['color'] = waypoint[1]['color'].strip(
-    ) if 'color' in waypoint[1].keys() else -1
-    command = "%s\n" % dumps(rgb_piles)
-    rgb_port.write(command.encode())
-
-
-def available_ports():
-    ports = comports()
-    return list(map(lambda x: x[0], ports))
 
 
 create_projs('2229')

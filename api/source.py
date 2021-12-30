@@ -1,14 +1,16 @@
-from helpers import available_ports, polygon, cvs_to_rows, rgb, rows_to_json, coordinate_distance
-from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
 from flask import Flask, request, jsonify, make_response
 from flask_socketio import SocketIO, send
 from flask_cors import CORS
 from os import path
 from platform import system
 from werkzeug.utils import secure_filename
-import json
 
+from helpers import polygon, cvs_to_rows, rows_to_json, coordinate_distance
+from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
+from serial_helpers import available_ports, rgb_matrix
+import json
 import logging
+
 
 if system == 'Linux':
     from os import uname
@@ -117,7 +119,7 @@ def set_location():
                 waypoint[0], {'lat': lasers[0][0], 'lng': lasers[0][1]})
             laser2dist = coordinate_distance(
                 waypoint[1], {'lat': lasers[1][0], 'lng': lasers[1][1]})
-            rgb(waypoint, bay_to_waypoint)
+            rgb_matrix(waypoint, bay_to_waypoint)
             moveLasers(config["truckHei"], laser1dist, laser2dist)
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 
