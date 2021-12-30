@@ -8,6 +8,8 @@ import NumberInput from "./NumberInput";
 const LaserConfig = () => {
   const [connected, setConnected] = useState(false);
   const [port, setPort] = useState();
+  const [manual, setManual] = useLocalStorage("laserAuto", true);
+  const [on, setOn] = useLocalStorage("laserOn", true);
   const [rectWidth, setRectWidth] = useLocalStorage("laserRWidth", 0);
   const [rectHeight, setRectHeight] = useLocalStorage("laserRHeight", 0);
   const [targetX, setTargetX] = useLocalStorage("laserTargetX", 0);
@@ -21,6 +23,8 @@ const LaserConfig = () => {
       x: targetX,
       y: targetY,
       z: targetZ,
+      on,
+      manual,
     };
     setLaserConfig(payload).then((res) => console.log(res));
   };
@@ -92,6 +96,18 @@ const LaserConfig = () => {
             </div>
           </div>
           <div className="is-flex is-flex-centered">
+            <button
+              onClick={handleSave}
+              className="button is-outlined is-success"
+            >
+              Save
+            </button>
+            <button
+              onClick={handleSave}
+              className="button is-outlined is-success"
+            >
+              Save
+            </button>
             <button
               onClick={handleSave}
               className="button is-outlined is-success"
