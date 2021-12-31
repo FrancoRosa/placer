@@ -34,8 +34,15 @@ def rgb_matrix(waypoint, bay_to_waypoint):
 
 
 def available_ports():
-    ports = comports()
-    return list(map(lambda x: x[0], ports))
+    port_details = comports()
+    ports = []
+    # ignore bluetooth ports
+    for p in port_details:
+        port = list(p)
+        if not 'BTHENUM' in port[2]:
+            ports.append(p[0])
+
+    return ports
 
 
 def send_to_laser(command):
@@ -54,16 +61,20 @@ def connect_laser():
     while True:
         ports = available_ports()
         for test_port in ports:
-            laser_connected = False
-            laser_port = serial.Serial(test_port, baudrate=38400, timeout=0.5)
-            laser_port.write(test_command)
-            response = laser_port.readline()
-            if test_response in response:
-                laser_connected = True
-                print("... laser connected at:", test_port)
-                while laser_connected:
-                    sleep(1)
+            try:
+                laser_connected = False
+                laser_port = serial.Serial(test_port, baudrate=38400, timeout=0.5)
+                laser_port.write(test_command)
+                response = laser_port.readline()
+                if test_response in response:
+                    laser_connected = True
+                    print("... laser connected at:", test_port)
+                    while laser_connected:
+                        sleep(5)
+            except:
+                pass
             sleep(1)
+        sleep(5)
 
 
 def get_laser():
