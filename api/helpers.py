@@ -89,7 +89,7 @@ def rows_to_json(rows, epsg_code):
     #     return
     result = []
     headers = rows[0]
-    print("... headers:", headers)
+    print("... headers found:", headers)
     values = rows[1:]
     if 'PILE ID,Pile Color,X,Y,Z' in headers:
         for value in values:

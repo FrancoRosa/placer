@@ -8,6 +8,10 @@ laser_connected = False
 laser_port = None
 
 
+def format_val(txt):
+    return "{value:.1f}".format(value=float(txt))
+
+
 def rgb_matrix(waypoint, bay_to_waypoint):
     rgb_port = serial.Serial('/dev/ttyS0')
 
@@ -47,6 +51,7 @@ def available_ports():
 
 def send_to_laser(command):
     global laser_connected
+    print(">>>", command)
     if laser_connected:
         try:
             laser_port.write(command.encode())
@@ -63,14 +68,15 @@ def connect_laser():
         for test_port in ports:
             try:
                 laser_connected = False
-                laser_port = serial.Serial(test_port, baudrate=38400, timeout=0.5)
+                laser_port = serial.Serial(
+                    test_port, baudrate=38400, timeout=0.5)
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 if test_response in response:
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
-                        sleep(5)
+                        sleep(1)
             except:
                 pass
             sleep(1)
@@ -81,6 +87,25 @@ def get_laser():
     global laser_port, laser_connected
     port = laser_port.port if laser_connected else None
     return {"connected": laser_connected, "port": port}
+
+
+def set_lsr_on(payload):
+    send_to_laser("{on()}") if payload['on'] else send_to_laser("{off()}")
+
+
+def set_lsr_blink(payload):
+    send_to_laser("{flash(1)}") if payload['blink'] else send_to_laser(
+        "{flash(0)}")
+
+
+def set_lsr_config(payload):
+    send_to_laser('{cfg("w", %s)}' % format_val(payload['w']))
+    send_to_laser('{cfg("h", %s)}' % format_val(payload['h']))
+    send_to_laser('{target(%s,%s,%s)}' % (
+        format_val(payload['x']),
+        format_val(payload['y']),
+        format_val(payload['z']),
+    ))
 
 
 Thread(target=connect_laser).start()

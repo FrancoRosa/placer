@@ -56,16 +56,30 @@ export const getSerialPorts = async () => {
 };
 
 export const getLaserStatus = async () => {
-  console.log("... getting serial ports");
-  const url = `${host}/api/serial_laser`;
+  console.log("... getting laser serial");
+  const url = `${host}/api/laser/serial`;
   const response = await axios.get(url);
   return response.data;
 };
 
 export const setLaserConfig = async (payload) => {
   console.log("... setting laser config");
-  const url = `${host}/api/set_laser_config`;
+  const url = `${host}/api/laser/config`;
   const response = await axios.post(url, payload);
+  return response.data;
+};
+
+export const setLaserOn = async (state) => {
+  console.log("... setting laser on");
+  const url = `${host}/api/laser/on`;
+  const response = await axios.post(url, state);
+  return response.data;
+};
+
+export const setLaserBlink = async (state) => {
+  console.log("... setting laser blink");
+  const url = `${host}/api/laser/blink`;
+  const response = await axios.post(url, state);
   return response.data;
 };
 

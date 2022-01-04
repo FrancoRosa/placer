@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from helpers import polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
-from serial_helpers import available_ports, rgb_matrix, get_laser
+from serial_helpers import available_ports, rgb_matrix, get_laser, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
 
@@ -91,9 +91,33 @@ def get_serial_ports():
     return send_response({"serial_ports": available_ports()})
 
 
-@app.route('/api/serial_laser', methods=['get'])
+@app.route('/api/laser/serial', methods=['get'])
 def get_serial_laser():
     return send_response(get_laser())
+
+
+@app.route('/api/laser/config', methods=['post'])
+def set_laser_config():
+    set_lsr_config(request.get_json())
+    return send_response({
+        "message": True,
+    })
+
+
+@app.route('/api/laser/on', methods=['post'])
+def set_laser_on():
+    set_lsr_on(request.get_json())
+    return send_response({
+        "message": True,
+    })
+
+
+@app.route('/api/laser/blink', methods=['post'])
+def set_laser_blink():
+    set_lsr_blink(request.get_json())
+    return send_response({
+        "message": True,
+    })
 
 
 @app.route('/api/location', methods=['post'])

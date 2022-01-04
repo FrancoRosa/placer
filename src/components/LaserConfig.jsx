@@ -1,15 +1,24 @@
-import { faFileAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { getLaserStatus, setLaserConfig } from "../js/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  getLaserStatus,
+  setLaserBlink,
+  setLaserConfig,
+  setLaserOn,
+} from "../js/api";
 import { useLocalStorage } from "../js/helpers";
 import NumberInput from "./NumberInput";
+import { faRedo } from "@fortawesome/free-solid-svg-icons";
 
 const LaserConfig = () => {
   const [connected, setConnected] = useState(false);
   const [port, setPort] = useState();
   const [manual, setManual] = useLocalStorage("laserAuto", true);
+  const [loading, setLoading] = useState(false);
+  const [driverSide, setDriverSide] = useLocalStorage("laserSide", true);
   const [on, setOn] = useLocalStorage("laserOn", true);
+  const [blink, setBlink] = useLocalStorage("laserBlink", true);
   const [rectWidth, setRectWidth] = useLocalStorage("laserRWidth", 0);
   const [rectHeight, setRectHeight] = useLocalStorage("laserRHeight", 0);
   const [targetX, setTargetX] = useLocalStorage("laserTargetX", 0);
@@ -23,17 +32,33 @@ const LaserConfig = () => {
       x: targetX,
       y: targetY,
       z: targetZ,
-      on,
       manual,
+      driverSide,
     };
     setLaserConfig(payload).then((res) => console.log(res));
   };
 
-  useEffect(() => {
+  const handleOn = () => {
+    setOn(!on);
+    setLaserOn({ on: !on });
+  };
+
+  const handleBlink = () => {
+    setBlink(!blink);
+    setLaserBlink({ blink: !blink });
+  };
+
+  const handleLaserStatus = () => {
+    setLoading(true);
     getLaserStatus().then((res) => {
       setConnected(res.connected);
       setPort(res.port);
+      setLoading(false);
     });
+  };
+
+  useEffect(() => {
+    handleLaserStatus();
   }, []);
 
   return (
@@ -49,26 +74,31 @@ const LaserConfig = () => {
               {connected ? "Laser connected at: " : "Laser disconnected"}
               <span>{connected && port}</span>
             </h1>
+            <div className="is-flex is-flex-centered">
+              <button
+                className={`button is-outlined ${loading && "is-loading"}`}
+                onClick={handleLaserStatus}
+              >
+                <FontAwesomeIcon icon={faRedo} />
+              </button>
+            </div>
           </div>
           <hr />
           <div className="columns">
-            <div className="column">
-              <NumberInput
-                label="Rectangle width (ft)"
-                value={rectWidth}
-                placeholder="E.g: 5"
-                changeHandler={setRectWidth}
-              />
-            </div>
-            <div className="column">
-              <NumberInput
-                label="Rectangle height (ft)"
-                value={rectHeight}
-                placeholder="E.g: 5"
-                changeHandler={setRectHeight}
-              />
-            </div>
+            <NumberInput
+              label="Rectangle width (ft)"
+              value={rectWidth}
+              placeholder="E.g: 5"
+              changeHandler={setRectWidth}
+            />
+            <NumberInput
+              label="Rectangle height (ft)"
+              value={rectHeight}
+              placeholder="E.g: 5"
+              changeHandler={setRectHeight}
+            />
           </div>
+          <hr />
           <div className="columns">
             <div className="column">
               <NumberInput
@@ -97,12 +127,20 @@ const LaserConfig = () => {
           </div>
           <div className="is-flex is-flex-centered">
             <button
-              onClick={() => setOn(!on)}
+              onClick={handleOn}
               className={`button is-outlined m-4 ${
                 on ? "is-success" : "is-danger"
               }`}
             >
               {on ? "Laser on" : "Laser off"}
+            </button>
+            <button
+              onClick={handleBlink}
+              className={`button is-outlined m-4 ${
+                blink ? "is-success" : "is-danger"
+              }`}
+            >
+              {blink ? "Blink on" : "Blink off"}
             </button>
             <button
               onClick={() => setManual(!manual)}
@@ -113,13 +151,23 @@ const LaserConfig = () => {
               {manual ? "Manual mode" : "Automatic mode"}
             </button>
             <button
+              onClick={() => setDriverSide(!driverSide)}
+              className={`button is-outlined m-4 ${
+                driverSide ? "is-success" : "is-warning"
+              }`}
+            >
+              {driverSide ? "Driver" : "Copilot"}
+            </button>
+          </div>
+          <hr />
+          <div className="is-flex is-flex-centered">
+            <button
               onClick={handleSave}
               className="button is-outlined is-success m-4"
             >
               Save
             </button>
           </div>
-          <hr />
         </div>
       </div>
     </div>
