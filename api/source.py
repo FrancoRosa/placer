@@ -44,6 +44,10 @@ config = {
     'truckHei': 0,
     'antennaX': 0,
     'antennaY': 0,
+    'laserX': 0,
+    'laserY': 0,
+    'laserZ': 0,
+    'reference': 'bay1',
     'bay1': 0,
     'bay2': 0,
     'epsg': '2229'

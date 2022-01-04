@@ -199,6 +199,8 @@ def polygon(center, heading, config):
     tLen = float(config['truckLen'])
     bay1 = float(config['bay1'])
     bay2 = float(config['bay2'])
+    laserX = float(config['laserX'])
+    laserY = float(config['laserY'])
     rot = radians(float(heading['heading']))
 
     def rotate_point(x, y, rot):
@@ -236,6 +238,9 @@ def polygon(center, heading, config):
             # Laser on the edges of the truck (left & right)
             rotate_point(cenX - anX, cenY, rot),           # 12
             rotate_point(cenX - (anX - tWid), cenY, rot),  # 13
+            # Galvo based laser
+            rotate_point(cenX - anX - laserX,
+                         cenY + anY - laserY, rot),           # 14
         ],
         'bays': [
             # bay points

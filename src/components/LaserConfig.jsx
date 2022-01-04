@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   getLaserStatus,
   setLaserBlink,
@@ -16,7 +15,6 @@ const LaserConfig = () => {
   const [port, setPort] = useState();
   const [manual, setManual] = useLocalStorage("laserAuto", true);
   const [loading, setLoading] = useState(false);
-  const [driverSide, setDriverSide] = useLocalStorage("laserSide", true);
   const [on, setOn] = useLocalStorage("laserOn", true);
   const [blink, setBlink] = useLocalStorage("laserBlink", true);
   const [rectWidth, setRectWidth] = useLocalStorage("laserRWidth", 0);
@@ -33,7 +31,6 @@ const LaserConfig = () => {
       y: targetY,
       z: targetZ,
       manual,
-      driverSide,
     };
     setLaserConfig(payload).then((res) => console.log(res));
   };
@@ -149,14 +146,6 @@ const LaserConfig = () => {
               }`}
             >
               {manual ? "Manual mode" : "Automatic mode"}
-            </button>
-            <button
-              onClick={() => setDriverSide(!driverSide)}
-              className={`button is-outlined m-4 ${
-                driverSide ? "is-success" : "is-warning"
-              }`}
-            >
-              {driverSide ? "Driver" : "Copilot"}
             </button>
           </div>
           <hr />

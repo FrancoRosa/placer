@@ -110,6 +110,7 @@ const UserMap = () => {
       setLasers([
         { lat: parsedMsg.truck[12][0], lng: parsedMsg.truck[12][1] },
         { lat: parsedMsg.truck[13][0], lng: parsedMsg.truck[13][1] },
+        { lat: parsedMsg.truck[14][0], lng: parsedMsg.truck[14][1] },
       ]);
     });
   };
@@ -299,13 +300,19 @@ const UserMap = () => {
                 height: 10,
               },
               // laser positions
+              // {
+              //   coordinates: [center.truck[12][1], center.truck[12][0]],
+              //   color: colors.green,
+              //   height: 10,
+              // },
+              // {
+              //   coordinates: [center.truck[13][1], center.truck[13][0]],
+              //   color: colors.green,
+              //   height: 10,
+              // },
+              // galvo laser
               {
-                coordinates: [center.truck[12][1], center.truck[12][0]],
-                color: colors.green,
-                height: 10,
-              },
-              {
-                coordinates: [center.truck[13][1], center.truck[13][0]],
+                coordinates: [center.truck[14][1], center.truck[14][0]],
                 color: colors.green,
                 height: 10,
               },

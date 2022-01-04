@@ -18,11 +18,15 @@ const Config = () => {
   const [antennaY, setAntennaY] = useState(localconfig.antennaY);
   const [bay1, setBay1] = useState(localconfig.bay1);
   const [bay2, setBay2] = useState(localconfig.bay2);
+  const [laserX, setLaserX] = useState(localconfig.laserX);
+  const [laserY, setLaserY] = useState(localconfig.laserY);
+  const [laserZ, setLaserZ] = useState(localconfig.laserZ);
+  const [reference, setReference] = useState(localconfig.reference);
   const [epsg, setEpsg] = useState(localconfig.epsg);
   const [feedback, setFeedback] = useState("");
 
   const uploadConfig = () => {
-    setLocalConfig({
+    const payload = {
       truckLen,
       truckWid,
       truckHei,
@@ -31,17 +35,13 @@ const Config = () => {
       bay1,
       bay2,
       epsg,
-    });
-    setConfig({
-      truckLen,
-      truckWid,
-      truckHei,
-      antennaX,
-      antennaY,
-      bay1,
-      bay2,
-      epsg,
-    })
+      laserX,
+      laserY,
+      laserZ,
+      reference,
+    };
+    setLocalConfig(payload);
+    setConfig(payload)
       .then(() => setFeedback("Success"))
       .catch(() => setFeedback("Fail"));
   };
@@ -98,6 +98,41 @@ const Config = () => {
               changeHandler={setBay2}
             />
           </div>
+          <hr style={{ margin: ".25em" }} />
+          <div className="">
+            <h2 className="has-text-centered">Laser distances (ft)</h2>
+            <div className="columns">
+              <NumberInput
+                label="From left"
+                value={laserX}
+                placeholder="E.g: 5"
+                changeHandler={setLaserX}
+              />
+              <NumberInput
+                label="From head"
+                value={laserY}
+                placeholder="E.g: 5"
+                changeHandler={setLaserY}
+              />
+              <NumberInput
+                label="From ground"
+                value={laserZ}
+                placeholder="E.g: 5"
+                changeHandler={setLaserZ}
+              />
+              <div className="field column">
+                <label className="label">Reference</label>
+                <div className="control">
+                  <div className="select">
+                    <select onChange={(e) => setReference(e.target.value)}>
+                      <option value="bay1">Bay 1</option>
+                      <option value="bay2">Bay 2</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="columns">
             <NumberInput
               label="EPSG code"
@@ -138,7 +173,7 @@ const Config = () => {
               </p>
             </div>
           </div>
-          <hr />
+          <hr style={{ margin: ".5em" }} />
           <FileInput />
         </div>
 
