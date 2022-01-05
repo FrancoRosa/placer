@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from helpers import polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
-from serial_helpers import available_ports, rgb_matrix, get_laser, set_lsr_config, set_lsr_on, set_lsr_blink
+from serial_helpers import available_ports, draw_square, rgb_matrix, get_laser, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
 
@@ -50,7 +50,8 @@ config = {
     'reference': 'bay1',
     'bay1': 0,
     'bay2': 0,
-    'epsg': '2229'
+    'epsg': '2229',
+    'laser_manual': False
 }
 ref_bay = {}
 waypoint = []
@@ -102,7 +103,10 @@ def get_serial_laser():
 
 @app.route('/api/laser/config', methods=['post'])
 def set_laser_config():
-    set_lsr_config(request.get_json())
+    global config
+    payload = request.get_json()
+    config["laser_manual"] = payload["manual"]
+    set_lsr_config(payload)
     return send_response({
         "message": True,
     })
@@ -142,13 +146,29 @@ def set_location():
                 "distX": [bay1dist["x"], bay2dist["x"]],
                 "distY": [bay1dist["y"], bay2dist["y"]],
             }
-            lasers = truck["truck"][12:14]
-            laser1dist = coordinate_distance(
-                waypoint[0], {'lat': lasers[0][0], 'lng': lasers[0][1]})
-            laser2dist = coordinate_distance(
-                waypoint[1], {'lat': lasers[1][0], 'lng': lasers[1][1]})
             rgb_matrix(waypoint, bay_to_waypoint)
-            moveLasers(config["truckHei"], laser1dist, laser2dist)
+
+            # Laser turrets
+
+            # lasers = truck["truck"][12:14]
+            # laser1dist = coordinate_distance(
+            #     waypoint[0], {'lat': lasers[0][0], 'lng': lasers[0][1]})
+            # laser2dist = coordinate_distance(
+            #     waypoint[1], {'lat': lasers[1][0], 'lng': lasers[1][1]})
+            # moveLasers(config["truckHei"], laser1dist, laser2dist)
+
+            # Laser galvo
+            reference = config["reference"]
+            manual_mode = config["laser_manual"]
+
+            laser = truck["truck"][14]
+            laser_index = 0 if reference == "bay1" else 1
+            laser_galvo = coordinate_distance(
+                waypoint[laser_index], {'lat': laser[0], 'lng': laser[1]})
+
+            if not manual_mode:
+                draw_square(laser_galvo, float(config["laserZ"]))
+
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 
     return send_response({"message": True})
@@ -165,7 +185,7 @@ def set_heading():
 @app.route('/api/config', methods=['post'])
 def set_config():
     global config
-    config = request.get_json()
+    config = {**config, **request.get_json()}
     create_projs(config['epsg'])
     return send_response({
         "message": True,

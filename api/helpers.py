@@ -246,7 +246,7 @@ def polygon(center, heading, config):
             # bay points
             rotate_point(cenX - anX - 3, cenY + anY - bay1, rot),
             rotate_point(cenX - anX + tWid + 3, cenY + anY - bay2, rot),
-        ]
+        ],
     }
 
 

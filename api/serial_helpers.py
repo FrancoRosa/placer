@@ -108,4 +108,12 @@ def set_lsr_config(payload):
     ))
 
 
+def draw_square(XYdistances, Zdistance):
+    send_to_laser('{target(%s,%s,%s)}' % (
+        format_val(XYdistances['x']),
+        format_val(XYdistances['y']),
+        format_val(Zdistance),
+    ))
+
+
 Thread(target=connect_laser).start()
