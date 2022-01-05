@@ -85,3 +85,8 @@ export const colorsFill = {
   white: [255, 255, 255, 128],
   yellow: [255, 255, 0, 128],
 };
+
+export const getTime = (timestamp) => {
+  const stamp = new Date(timestamp * 1000);
+  return stamp.toLocaleString().split(", ")[1];
+};

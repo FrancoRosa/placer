@@ -7,6 +7,7 @@ import Home from "./Home";
 import Tabs from "./Tabs";
 import NavDebug from "./NavDebug";
 import LaserConfig from "./LaserConfig";
+import GPSStatus from "./GPSStatus";
 
 const store = createStore(model);
 
@@ -19,6 +20,7 @@ const App = () => {
           <Redirect exact from="/" to="/map" />
           <Route path="/config" component={Config} />
           <Route path="/laser" component={LaserConfig} />
+          <Route path="/gps" component={GPSStatus} />
           <Route path="/debug" component={NavDebug} />
           <Route path="/map" component={Home} />
         </Switch>

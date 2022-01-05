@@ -62,6 +62,13 @@ export const getLaserStatus = async () => {
   return response.data;
 };
 
+export const getGPSStatus = async () => {
+  console.log("... getting laser serial");
+  const url = `${host}/api/gps/serial`;
+  const response = await axios.get(url);
+  return response.data;
+};
+
 export const setLaserConfig = async (payload) => {
   console.log("... setting laser config");
   const url = `${host}/api/laser/config`;

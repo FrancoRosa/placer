@@ -3,6 +3,7 @@ import {
   faMapMarked,
   faBug,
   faSun,
+  faSatelliteDish,
 } from "@fortawesome/free-solid-svg-icons";
 import Tab from "./Tab";
 
@@ -14,6 +15,7 @@ const Tabs = () => {
         <Tab name="Config" icon={faTools} />
         <Tab name="Debug" icon={faBug} />
         <Tab name="Laser" icon={faSun} />
+        <Tab name="GPS" icon={faSatelliteDish} />
       </ul>
     </div>
   );

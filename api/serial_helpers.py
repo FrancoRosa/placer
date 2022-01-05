@@ -13,6 +13,7 @@ laser_connected = False
 laser_port = None
 gps_connected = False
 gps_port = None
+gps_logs = []
 
 
 def format_val(txt):
@@ -93,7 +94,7 @@ def connect_laser():
 
 
 def connect_gps():
-    global gps_connected, gps_port
+    global gps_connected, gps_port, gps_logs
     test_command = '$GNGGA'.encode()
     while True:
         ports = available_ports()
@@ -112,8 +113,11 @@ def connect_gps():
                         print("... gps connected at:", test_port)
                         while gps_connected:
                             gps_port.cd  # Force an error if serial disconnected
-                            gps_frame_processor(gps_port.readline())
-                            sleep(1)
+                            response = gps_port.readline()
+                            gps_logs.append([int(time()), response.decode()])
+                            if len(gps_logs) > 20:
+                                gps_logs = gps_logs[1:]
+                            gps_frame_processor(response)
 
                     end = time()
                     elapsed = end - start
@@ -141,6 +145,12 @@ def get_laser():
     global laser_port, laser_connected
     port = laser_port.port if laser_connected else None
     return {"connected": laser_connected, "port": port}
+
+
+def get_gps():
+    global gps_port, gps_connected
+    port = gps_port.port if gps_connected else None
+    return {"connected": gps_connected, "port": port, "logs": gps_logs}
 
 
 def set_lsr_on(payload):

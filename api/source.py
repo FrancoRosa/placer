@@ -7,7 +7,8 @@ from werkzeug.utils import secure_filename
 
 from helpers import polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
-from serial_helpers import available_ports, draw_square, rgb_matrix, get_laser, set_lsr_config, set_lsr_on, set_lsr_blink
+from serial_helpers import get_laser, get_gps
+from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
 
@@ -99,6 +100,11 @@ def get_serial_ports():
 @app.route('/api/laser/serial', methods=['get'])
 def get_serial_laser():
     return send_response(get_laser())
+
+
+@app.route('/api/gps/serial', methods=['get'])
+def get_serial_gps():
+    return send_response(get_gps())
 
 
 @app.route('/api/laser/config', methods=['post'])
