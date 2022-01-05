@@ -1,11 +1,13 @@
 from serial.tools.list_ports import comports
 from json import dumps
-from time import sleep
+from time import sleep, time
 from threading import Thread
 import serial
 
 laser_connected = False
 laser_port = None
+gps_connected = False
+gps_port = None
 
 
 def format_val(txt):
@@ -76,8 +78,43 @@ def connect_laser():
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
+                        laser_port.cd  # Force an error if serial disconnected
                         sleep(1)
             except:
+                print("... laser serial error")
+                pass
+            sleep(1)
+        sleep(5)
+
+
+def connect_gps():
+    global gps_connected, gps_port
+    test_command = '$GNGGA'.encode()
+    while True:
+        ports = available_ports()
+        for test_port in ports:
+            try:
+                gps_connected = False
+                timeout = 2
+                gps_port = serial.Serial(
+                    test_port, baudrate=115200, timeout=timeout)
+                start = time()
+                while True:
+                    response = gps_port.readline()
+
+                    if test_command in response:
+                        gps_connected = True
+                        print("... gps connected at:", test_port)
+                        while gps_connected:
+                            gps_port.cd  # Force an error if serial disconnected
+                            sleep(1)
+
+                    end = time()
+                    elapsed = end - start
+                    if elapsed > timeout:
+                        break
+            except:
+                print("... gps serial error")
                 pass
             sleep(1)
         sleep(5)
@@ -117,3 +154,4 @@ def draw_square(XYdistances, Zdistance):
 
 
 Thread(target=connect_laser).start()
+Thread(target=connect_gps).start()
