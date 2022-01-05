@@ -2,7 +2,12 @@ from serial.tools.list_ports import comports
 from json import dumps
 from time import sleep, time
 from threading import Thread
+from requests import post
 import serial
+
+from uart_procesor import get_course, get_latlng
+
+url = 'http://localhost:9999'
 
 laser_connected = False
 laser_port = None
@@ -107,6 +112,7 @@ def connect_gps():
                         print("... gps connected at:", test_port)
                         while gps_connected:
                             gps_port.cd  # Force an error if serial disconnected
+                            gps_frame_processor(gps_port.readline())
                             sleep(1)
 
                     end = time()
@@ -118,6 +124,17 @@ def connect_gps():
                 pass
             sleep(1)
         sleep(5)
+
+
+def gps_frame_processor(line):
+    if b'$GNGGA' in line:
+        location = get_latlng(line)
+        post(url+'/api/location', json=location)
+
+    if b'$GNVTG' in line:
+        heading = get_course(line)
+        if heading['heading'] != None:
+            post(url+'/api/heading', json=heading)
 
 
 def get_laser():
