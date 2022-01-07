@@ -90,7 +90,6 @@ def connect_laser():
                         response = laser_port.readline()
                         if len(response) > 1:
                             print("<<<", response.decode())
-                        sleep(1)
             except:
                 print("... laser serial error")
                 pass
