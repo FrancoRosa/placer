@@ -87,9 +87,10 @@ def connect_laser():
                     print("... laser connected at:", test_port)
                     while laser_connected:
                         laser_port.cd  # Force an error if serial disconnected
-                        response = laser_port.readline()
-                        if len(response) > 1:
-                            print("<<<", response.decode())
+                        sleep(1)
+                        # response = laser_port.readline()
+                        # if len(response) > 1:
+                        #     print("<<<", response.decode())
             except:
                 print("... laser serial error")
                 pass
