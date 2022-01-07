@@ -85,7 +85,9 @@ def connect_laser():
                     print("... laser connected at:", test_port)
                     while laser_connected:
                         laser_port.cd  # Force an error if serial disconnected
-                        print("<<<", laser_port.readline())
+                        response = laser_port.readline()
+                        if len(response) > 1:
+                            print("<<<", response.decode())
                         sleep(1)
             except:
                 print("... laser serial error")
@@ -166,6 +168,7 @@ def set_lsr_blink(payload):
 def set_lsr_config(payload):
     send_to_laser('{cfg("w", %s)}' % format_val(payload['w']))
     send_to_laser('{cfg("h", %s)}' % format_val(payload['h']))
+    send_to_laser('{cfg("angle", %s)}' % format_val(payload['laserA']))
     send_to_laser('{target(%s, %s, %s)}' % (
         format_val(payload['x']),
         format_val(payload['y']),
@@ -174,10 +177,10 @@ def set_lsr_config(payload):
 
 
 def draw_square(XYdistances, Zdistance):
-    send_to_laser('{target(%s,%s,%s)}' % (
+    send_to_laser('{target(%s, %s, %s)}' % (
         format_val(XYdistances['x']),
+        format_val(-Zdistance),
         format_val(XYdistances['y']),
-        format_val(Zdistance),
     ))
 
 

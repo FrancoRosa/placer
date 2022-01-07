@@ -22,6 +22,7 @@ const LaserConfig = () => {
   const [targetX, setTargetX] = useLocalStorage("laserTargetX", 0);
   const [targetY, setTargetY] = useLocalStorage("laserTargetY", 0);
   const [targetZ, setTargetZ] = useLocalStorage("laserTargetZ", 0);
+  const [targetA, setTargetA] = useLocalStorage("laserTargetA", 0);
 
   const handleSave = () => {
     const payload = {
@@ -30,6 +31,7 @@ const LaserConfig = () => {
       x: targetX,
       y: targetY,
       z: targetZ,
+      a: targetA,
       manual,
     };
     setLaserConfig(payload).then((res) => console.log(res));
@@ -97,30 +99,30 @@ const LaserConfig = () => {
           </div>
           <hr />
           <div className="columns">
-            <div className="column">
-              <NumberInput
-                label="Target X (ft)"
-                value={targetX}
-                placeholder="E.g: 5"
-                changeHandler={setTargetX}
-              />
-            </div>
-            <div className="column">
-              <NumberInput
-                label="Target Y (ft)"
-                value={targetY}
-                placeholder="E.g: 5"
-                changeHandler={setTargetY}
-              />
-            </div>
-            <div className="column">
-              <NumberInput
-                label="Target Z (ft)"
-                value={targetZ}
-                placeholder="E.g: 5"
-                changeHandler={setTargetZ}
-              />
-            </div>
+            <NumberInput
+              label="Target X (ft)"
+              value={targetX}
+              placeholder="E.g: 5"
+              changeHandler={setTargetX}
+            />
+            <NumberInput
+              label="Target Y (ft)"
+              value={targetY}
+              placeholder="E.g: 5"
+              changeHandler={setTargetY}
+            />
+            <NumberInput
+              label="Target Z (ft)"
+              value={targetZ}
+              placeholder="E.g: 5"
+              changeHandler={setTargetZ}
+            />
+            <NumberInput
+              label="Tilt Angle (deg)"
+              value={targetA}
+              placeholder="E.g: 20"
+              changeHandler={setTargetA}
+            />
           </div>
           <div className="is-flex is-flex-centered">
             <button
