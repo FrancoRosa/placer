@@ -152,7 +152,8 @@ def set_location():
                 "distX": [bay1dist["x"], bay2dist["x"]],
                 "distY": [bay1dist["y"], bay2dist["y"]],
             }
-            rgb_matrix(waypoint, bay_to_waypoint)
+            if rpi:
+                rgb_matrix(waypoint, bay_to_waypoint)
 
             # Laser turrets
 
