@@ -16,8 +16,10 @@ gps_port = None
 gps_logs = []
 
 
-def format_val(txt):
-    return "{value:.1f}".format(value=float(txt))
+def format_val(txt, to_ft=True):
+    number = float(txt)
+    value = number*0.305 if to_ft else number
+    return "{value:.1f}".format(value=value)
 
 
 def rgb_matrix(waypoint, bay_to_waypoint):
@@ -168,7 +170,8 @@ def set_lsr_blink(payload):
 def set_lsr_config(payload):
     send_to_laser('{cfg("w", %s)}' % format_val(payload['w']))
     send_to_laser('{cfg("h", %s)}' % format_val(payload['h']))
-    send_to_laser('{cfg("angle", %s)}' % format_val(payload['laserA']))
+    send_to_laser('{cfg("angle", %s)}' %
+                  format_val(payload['a'], to_ft=False))
     send_to_laser('{target(%s, %s, %s)}' % (
         format_val(payload['x']),
         format_val(payload['y']),
@@ -178,9 +181,9 @@ def set_lsr_config(payload):
 
 def draw_square(XYdistances, Zdistance):
     send_to_laser('{target(%s, %s, %s)}' % (
-        format_val(XYdistances['x']),
-        format_val(-Zdistance),
         format_val(XYdistances['y']),
+        format_val(-Zdistance),
+        format_val(XYdistances['x']),
     ))
 
 
