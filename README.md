@@ -8,6 +8,7 @@
     - [File formats supported](#file-formats-supported)
     - [Colors](#colors)
     - [Todo](#todo)
+  - [Installation instructions](#installation-instructions)
 
 ## Project description
 
@@ -77,12 +78,59 @@ color_codes = {
 }
 ```
 
-### Todo
-- Look for nearest piles.
-- Lag on receiving points.
-- Audio commands on ipad.
-- Avoid repeating bays onn the field.
-- Add cross point
-- Show speed
-- Show accuracy
-- Change bay geometry
+## Installation instructions
+### Requirements:
+Go to the NodeJS and Python web pages and follow the installation instructions that fit your operative system
+
+NodeJS
+https://nodejs.org/
+Python3
+https://docs.python.org/3/index.html
+
+### Node dependencies:
+Using a terminal run the following command:
+```BASH
+npm i -g serve
+```
+
+### Python dependencies:
+Using a terminal run the following command:
+```BASH
+pip install flask
+pip install requests
+pip install flask-cors
+pip install flask-socketio
+pip install pyproj
+```
+
+### Software donwload:
+Open a terminal and use this command:
+
+```BASH
+git clone https://github.com/FrancoRosa/placer.git
+```
+
+## Start Software
+### Backend
+Open a terminal, navigate to the project directory, then run the python script as shown below:
+
+```BASH
+cd placer/api
+python source.py
+```
+
+### Frontend
+Open a terminal, navigate to the project directory, then run the user interface as shown below:
+
+```BASH
+cd placer
+npx serve -s build/
+```
+
+## How to use it.
+1. Open your web browser and go to *localhost:3000*
+2. Go to the configuration tap and save your truck parameters.
+3. Upload the waypoint files.
+4. Go to Laser or GPS tabs to see if they are connected.
+
+
