@@ -88,7 +88,7 @@ def connect_laser():
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 print(response.decode())
-                if laser_port == '/dev/ttyUSB0':
+                if test_port == '/dev/ttyUSB0':
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
