@@ -21,7 +21,7 @@ else:
 
 UPLOAD_FOLDER = 'cvs_files'
 if rpi:
-    UPLOAD_FOLDER = '/home/pi/pile-placer/api/cvs_files'
+    UPLOAD_FOLDER = '/home/pi/placer/api/cvs_files'
 
 ALLOWED_EXTENSIONS = {'csv', 'xlsx'}
 
