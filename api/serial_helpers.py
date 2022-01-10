@@ -204,4 +204,4 @@ def draw_square(XYdistances, Zdistance):
 
 
 Thread(target=connect_laser).start()
-# Thread(target=connect_gps).start()
+Thread(target=connect_gps).start()
