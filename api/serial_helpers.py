@@ -77,7 +77,7 @@ def connect_laser():
     while True:
         ports = available_ports()
         for test_port in ports:
-            print(test_port.name)
+            print(test_port)
             try:
                 laser_connected = False
                 laser_port = serial.Serial(
