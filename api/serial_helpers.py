@@ -19,7 +19,7 @@ gps_logs = []
 def format_val(txt, to_ft=True):
     number = float(txt)
     value = number*0.305 if to_ft else number
-    return "{value:.1f}".format(value=value)
+    return "{value:.2f}".format(value=value)
 
 
 def rgb_matrix(waypoint, bay_to_waypoint):
