@@ -119,18 +119,23 @@ def connect_gps():
                         while gps_connected:
                             gps_port.cd  # Force an error if serial disconnected
                             response = gps_port.readline()
-                            gps_logs.append([int(time()), response.decode()])
+                            gps_frame_processor(response)
+
+                            try:
+                                response = response.decode()
+                            except:
+                                response = ''
+                            gps_logs.append([int(time()), response])
                             if len(gps_logs) > 20:
                                 gps_logs = gps_logs[1:]
-                            gps_frame_processor(response)
 
                     end = time()
                     elapsed = end - start
                     if elapsed > timeout:
                         break
-            except:
-                print("... gps serial error")
-                pass
+            except Exception as error:
+                error_string = str(error)
+                print(error_string)
             sleep(1)
         sleep(5)
 
