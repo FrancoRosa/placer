@@ -181,6 +181,7 @@ def set_lsr_blink(payload):
 
 
 def set_lsr_config(payload):
+    send_to_laser('{floor()}')
     send_to_laser('{cfg("w", %s)}' % format_val(payload['w']))
     send_to_laser('{cfg("h", %s)}' % format_val(payload['h']))
     send_to_laser('{cfg("angle", %s)}' %
