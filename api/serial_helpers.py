@@ -81,7 +81,8 @@ def connect_laser():
             try:
                 laser_connected = False
                 laser_port = serial.Serial(
-                    test_port, baudrate=38400, timeout=0.5)
+                    test_port, baudrate=38400, timeout=1)
+                laser_port.open()
                 print(">>>", "sending tst comnad", test_port)
                 laser_port.write(test_command)
                 response = laser_port.readline()
@@ -96,7 +97,10 @@ def connect_laser():
                         # response = laser_port.readline()
                         # if len(response) > 1:
                         #     print("<<<", response.decode())
+                laser_port.close()
             except Exception as error:
+                laser_port.close()
+
                 print(str(error))
                 print("... laser serial error")
                 pass
