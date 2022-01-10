@@ -77,10 +77,12 @@ def connect_laser():
     while True:
         ports = available_ports()
         for test_port in ports:
+            print(test_port.name)
             try:
                 laser_connected = False
                 laser_port = serial.Serial(
                     test_port, baudrate=38400, timeout=0.5)
+                print(">>>", "sending tst comnad")
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 print(response.decode())
