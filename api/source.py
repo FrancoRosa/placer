@@ -13,7 +13,7 @@ import json
 import logging
 
 
-if system == 'Linux':
+if system() == 'Linux':
     from os import uname
     rpi = uname()[4] != 'x86_64'
 else:
