@@ -101,10 +101,8 @@ def connect_laser():
                 laser_port.close()
             except Exception as error:
                 laser_port.close()
-
                 print(str(error))
                 print("... laser serial error")
-                pass
             sleep(1)
         sleep(5)
 
@@ -206,4 +204,4 @@ def draw_square(XYdistances, Zdistance):
 
 
 Thread(target=connect_laser).start()
-Thread(target=connect_gps).start()
+# Thread(target=connect_gps).start()
