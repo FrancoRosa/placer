@@ -71,6 +71,7 @@ def send_to_laser(command):
 
 def connect_laser():
     global laser_connected, laser_port
+    sleep(5)
     print("... connect laser")
     test_command = '{version()}'.encode()
     test_response = 'FIRMWARE'.encode()
@@ -87,7 +88,7 @@ def connect_laser():
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 print(response.decode())
-                if test_response in response or test_response in response:
+                if test_response in response or test_response2 in response:
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
@@ -110,6 +111,7 @@ def connect_laser():
 
 def connect_gps():
     global gps_connected, gps_port, gps_logs
+    sleep(4)
     test_command = '$GNGGA'.encode()
     while True:
         ports = available_ports()
