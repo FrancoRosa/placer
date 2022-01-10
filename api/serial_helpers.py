@@ -71,6 +71,7 @@ def send_to_laser(command):
 
 def connect_laser():
     global laser_connected, laser_port
+    print("... connect laser")
     test_command = '{version()}'.encode()
     test_response = 'FIRMWARE'.encode()
     while True:
@@ -82,6 +83,7 @@ def connect_laser():
                     test_port, baudrate=38400, timeout=0.5)
                 laser_port.write(test_command)
                 response = laser_port.readline()
+                print(response.decode())
                 if test_response in response:
                     laser_connected = True
                     print("... laser connected at:", test_port)
