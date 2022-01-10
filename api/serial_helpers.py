@@ -103,6 +103,7 @@ def connect_gps():
     test_command = '$GNGGA'.encode()
     while True:
         ports = available_ports()
+        print(ports)
         for test_port in ports:
             try:
                 gps_connected = False
