@@ -74,6 +74,7 @@ def connect_laser():
     print("... connect laser")
     test_command = '{version()}'.encode()
     test_response = 'FIRMWARE'.encode()
+    test_response2 = 'FRWR_ESO:163'.encode()
     while True:
         ports = available_ports()
         for test_port in ports:
@@ -82,12 +83,11 @@ def connect_laser():
                 laser_connected = False
                 laser_port = serial.Serial(
                     test_port, baudrate=38400, timeout=1)
-                laser_port.open()
                 print(">>>", "sending tst comnad", test_port)
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 print(response.decode())
-                if test_response in response:
+                if test_response in response or test_response in response:
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
