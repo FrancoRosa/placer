@@ -82,7 +82,7 @@ def connect_laser():
                 laser_connected = False
                 laser_port = serial.Serial(
                     test_port, baudrate=38400, timeout=0.5)
-                print(">>>", "sending tst comnad")
+                print(">>>", "sending tst comnad", test_port)
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 print(response.decode())
@@ -90,6 +90,7 @@ def connect_laser():
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
+                        print("...")
                         laser_port.cd  # Force an error if serial disconnected
                         sleep(1)
                         # response = laser_port.readline()
