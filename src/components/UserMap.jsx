@@ -43,10 +43,7 @@ const UserMap = () => {
     { lat: 0, lng: 0 },
     { lat: 0, lng: 0 },
   ]);
-  const [lasers, setLasers] = useState([]);
-  const [truckBundle, setTruckBundle] = useState([]);
   const [verticalLine, setVerticalLine] = useState({});
-  const [horizontalLine, setHorizontalLine] = useState([]);
   const [bays, setBays] = useState([
     { lat: 0, lng: 0 },
     { lat: 0, lng: 0 },
@@ -92,24 +89,6 @@ const UserMap = () => {
           from: [parsedMsg.truck[4][1], parsedMsg.truck[4][0]],
           to: [parsedMsg.truck[5][1], parsedMsg.truck[5][0]],
         },
-      ]);
-
-      setHorizontalLine([
-        { lat: parsedMsg.truck[10][0], lng: parsedMsg.truck[10][1] },
-        { lat: parsedMsg.truck[11][0], lng: parsedMsg.truck[11][1] },
-      ]);
-
-      setTruckBundle([
-        { lat: parsedMsg.truck[6][0], lng: parsedMsg.truck[6][1] },
-        { lat: parsedMsg.truck[7][0], lng: parsedMsg.truck[7][1] },
-        { lat: parsedMsg.truck[8][0], lng: parsedMsg.truck[8][1] },
-        { lat: parsedMsg.truck[9][0], lng: parsedMsg.truck[9][1] },
-        { lat: parsedMsg.truck[6][0], lng: parsedMsg.truck[6][1] },
-      ]);
-
-      setLasers([
-        { lat: parsedMsg.truck[12][0], lng: parsedMsg.truck[12][1] },
-        { lat: parsedMsg.truck[13][0], lng: parsedMsg.truck[13][1] },
       ]);
     });
   };
@@ -299,13 +278,19 @@ const UserMap = () => {
                 height: 10,
               },
               // laser positions
+              // {
+              //   coordinates: [center.truck[12][1], center.truck[12][0]],
+              //   color: colors.green,
+              //   height: 10,
+              // },
+              // {
+              //   coordinates: [center.truck[13][1], center.truck[13][0]],
+              //   color: colors.green,
+              //   height: 10,
+              // },
+              // galvo laser
               {
-                coordinates: [center.truck[12][1], center.truck[12][0]],
-                color: colors.green,
-                height: 10,
-              },
-              {
-                coordinates: [center.truck[13][1], center.truck[13][0]],
+                coordinates: [center.truck[14][1], center.truck[14][0]],
                 color: colors.green,
                 height: 10,
               },

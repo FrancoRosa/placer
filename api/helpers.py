@@ -89,7 +89,7 @@ def rows_to_json(rows, epsg_code):
     #     return
     result = []
     headers = rows[0]
-    print("... headers:", headers)
+    print("... headers found:", headers)
     values = rows[1:]
     if 'PILE ID,Pile Color,X,Y,Z' in headers:
         for value in values:
@@ -199,6 +199,8 @@ def polygon(center, heading, config):
     tLen = float(config['truckLen'])
     bay1 = float(config['bay1'])
     bay2 = float(config['bay2'])
+    laserX = float(config['laserX'])
+    laserY = float(config['laserY'])
     rot = radians(float(heading['heading']))
 
     def rotate_point(x, y, rot):
@@ -236,12 +238,15 @@ def polygon(center, heading, config):
             # Laser on the edges of the truck (left & right)
             rotate_point(cenX - anX, cenY, rot),           # 12
             rotate_point(cenX - (anX - tWid), cenY, rot),  # 13
+            # Galvo based laser
+            rotate_point(cenX - anX - laserX,
+                         cenY + anY - laserY, rot),           # 14
         ],
         'bays': [
             # bay points
             rotate_point(cenX - anX - 3, cenY + anY - bay1, rot),
             rotate_point(cenX - anX + tWid + 3, cenY + anY - bay2, rot),
-        ]
+        ],
     }
 
 

@@ -1,11 +1,20 @@
-const NumberInput = ({label, value, placeholder, changeHandler}) => {
-  return(
+const NumberInput = ({
+  label,
+  value,
+  placeholder,
+  changeHandler,
+  size = "is-normal",
+}) => {
+  return (
     <div className="field column">
       <label className="label">{label}</label>
       <p className="control">
-        <input className="input is-medium" type="number" step={0.1}
+        <input
+          className={`input ${size}`}
+          type="number"
+          step={0.1}
           placeholder={placeholder}
-          onChange={e => changeHandler(e.target.value)}
+          onChange={(e) => changeHandler(e.target.value)}
           value={value}
         />
       </p>
@@ -13,4 +22,4 @@ const NumberInput = ({label, value, placeholder, changeHandler}) => {
   );
 };
 
-export default NumberInput
+export default NumberInput;

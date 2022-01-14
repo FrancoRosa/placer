@@ -7,12 +7,13 @@ from werkzeug.utils import secure_filename
 
 from helpers import polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
-from serial_helpers import available_ports, rgb_matrix, get_laser
+from serial_helpers import get_laser, get_gps
+from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
 
 
-if system == 'Linux':
+if system() == 'Linux':
     from os import uname
     rpi = uname()[4] != 'x86_64'
 else:
@@ -20,7 +21,7 @@ else:
 
 UPLOAD_FOLDER = 'cvs_files'
 if rpi:
-    UPLOAD_FOLDER = '/home/pi/pile-placer/api/cvs_files'
+    UPLOAD_FOLDER = '/home/pi/placer/api/cvs_files'
 
 ALLOWED_EXTENSIONS = {'csv', 'xlsx'}
 
@@ -44,9 +45,14 @@ config = {
     'truckHei': 0,
     'antennaX': 0,
     'antennaY': 0,
+    'laserX': 0,
+    'laserY': 0,
+    'laserZ': 0,
+    'reference': 'bay1',
     'bay1': 0,
     'bay2': 0,
-    'epsg': '2229'
+    'epsg': '2229',
+    'laser_manual': False
 }
 ref_bay = {}
 waypoint = []
@@ -91,9 +97,41 @@ def get_serial_ports():
     return send_response({"serial_ports": available_ports()})
 
 
-@app.route('/api/serial_laser', methods=['get'])
+@app.route('/api/laser/serial', methods=['get'])
 def get_serial_laser():
     return send_response(get_laser())
+
+
+@app.route('/api/gps/serial', methods=['get'])
+def get_serial_gps():
+    return send_response(get_gps())
+
+
+@app.route('/api/laser/config', methods=['post'])
+def set_laser_config():
+    global config
+    payload = request.get_json()
+    config["laser_manual"] = payload["manual"]
+    set_lsr_config(payload)
+    return send_response({
+        "message": True,
+    })
+
+
+@app.route('/api/laser/on', methods=['post'])
+def set_laser_on():
+    set_lsr_on(request.get_json())
+    return send_response({
+        "message": True,
+    })
+
+
+@app.route('/api/laser/blink', methods=['post'])
+def set_laser_blink():
+    set_lsr_blink(request.get_json())
+    return send_response({
+        "message": True,
+    })
 
 
 @app.route('/api/location', methods=['post'])
@@ -114,13 +152,30 @@ def set_location():
                 "distX": [bay1dist["x"], bay2dist["x"]],
                 "distY": [bay1dist["y"], bay2dist["y"]],
             }
-            lasers = truck["truck"][12:14]
-            laser1dist = coordinate_distance(
-                waypoint[0], {'lat': lasers[0][0], 'lng': lasers[0][1]})
-            laser2dist = coordinate_distance(
-                waypoint[1], {'lat': lasers[1][0], 'lng': lasers[1][1]})
-            rgb_matrix(waypoint, bay_to_waypoint)
-            moveLasers(config["truckHei"], laser1dist, laser2dist)
+            if rpi:
+                rgb_matrix(waypoint, bay_to_waypoint)
+
+            # Laser turrets
+
+            # lasers = truck["truck"][12:14]
+            # laser1dist = coordinate_distance(
+            #     waypoint[0], {'lat': lasers[0][0], 'lng': lasers[0][1]})
+            # laser2dist = coordinate_distance(
+            #     waypoint[1], {'lat': lasers[1][0], 'lng': lasers[1][1]})
+            # moveLasers(config["truckHei"], laser1dist, laser2dist)
+
+            # Laser galvo
+            reference = config["reference"]
+            manual_mode = config["laser_manual"]
+
+            laser = truck["truck"][14]
+            laser_index = 0 if reference == "bay1" else 1
+            laser_galvo = coordinate_distance(
+                waypoint[laser_index], {'lat': laser[0], 'lng': laser[1]})
+
+            if not manual_mode:
+                draw_square(laser_galvo, float(config["laserZ"]))
+
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 
     return send_response({"message": True})
@@ -137,7 +192,7 @@ def set_heading():
 @app.route('/api/config', methods=['post'])
 def set_config():
     global config
-    config = request.get_json()
+    config = {**config, **request.get_json()}
     create_projs(config['epsg'])
     return send_response({
         "message": True,
