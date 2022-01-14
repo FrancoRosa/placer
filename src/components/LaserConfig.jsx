@@ -9,6 +9,7 @@ import {
 import { useLocalStorage } from "../js/helpers";
 import NumberInput from "./NumberInput";
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
+import laserImg from "../assets/laser.jpeg"
 
 const LaserConfig = () => {
   const [connected, setConnected] = useState(false);
@@ -23,6 +24,9 @@ const LaserConfig = () => {
   const [targetY, setTargetY] = useLocalStorage("laserTargetY", 0);
   const [targetZ, setTargetZ] = useLocalStorage("laserTargetZ", 0);
   const [targetA, setTargetA] = useLocalStorage("laserTargetA", 0);
+  const [minZ, setMinZ] = useState()
+  const [maxZ, setMaxZ] = useState()
+  const [maxX, setMaxX] = useState()
 
   const handleSave = () => {
     const payload = {
@@ -36,6 +40,17 @@ const LaserConfig = () => {
     };
     setLaserConfig(payload).then((res) => console.log(res));
   };
+
+
+
+  const handleRange = (height, angle) => {
+    const deg_to_rad = (degrees) => {
+      return degrees * (Math.PI/180);
+    }
+    setMaxZ(height/Math.tan(deg_to_rad(angle-10)));
+    setMinZ(height/Math.tan(deg_to_rad(angle+10)));
+    setMaxX(maxZ-minZ)
+  }
 
   const handleOn = () => {
     setOn(!on);
@@ -57,8 +72,15 @@ const LaserConfig = () => {
   };
 
   useEffect(() => {
+    handleRange(-targetY, targetA)
+  }, [targetY, targetA]);
+
+  
+  useEffect(() => {
     handleLaserStatus();
   }, []);
+
+  
 
   return (
     <div className="container">
@@ -159,6 +181,13 @@ const LaserConfig = () => {
               Save
             </button>
           </div>
+        </div>
+        <div className="column">
+          <img src={laserImg} alt="laser instructions" className="zoom_img"  />
+          <h3>Canvas range</h3>
+          <p>Zmax: {maxZ}</p>    
+          <p>Zmin: {minZ}</p>    
+          <p>Xmax: {maxX}</p>    
         </div>
       </div>
     </div>
