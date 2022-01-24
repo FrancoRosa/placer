@@ -24,9 +24,9 @@ const LaserConfig = () => {
   const [targetY, setTargetY] = useLocalStorage("laserTargetY", 0);
   const [targetZ, setTargetZ] = useLocalStorage("laserTargetZ", -2);
   const [targetA, setTargetA] = useLocalStorage("laserTargetA", 20);
-  const [minZ, setMinZ] = useState();
-  const [maxZ, setMaxZ] = useState();
-  const [maxX, setMaxX] = useState();
+  const [minZ, setMinZ] = useState(0);
+  const [maxZ, setMaxZ] = useState(0);
+  const [maxX, setMaxX] = useState(0);
 
   const handleSave = () => {
     const payload = {

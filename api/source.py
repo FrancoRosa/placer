@@ -48,6 +48,7 @@ config = {
     'laserX': 0,
     'laserY': 0,
     'laserZ': 0,
+    'laserScale': 1,
     'reference': 'bay1',
     'bay1': 0,
     'bay2': 0,
@@ -169,12 +170,14 @@ def set_location():
             manual_mode = config["laser_manual"]
 
             laser = truck["truck"][14]
-            laser_index = 0 if reference == "bay1" else 1
+            laser_index = 1 if reference == "bay1" else 0
+            print("laser index:", laser_index)
             laser_galvo = coordinate_distance(
                 waypoint[laser_index], {'lat': laser[0], 'lng': laser[1]})
 
             if not manual_mode:
-                draw_square(laser_galvo, float(config["laserZ"]))
+                draw_square(laser_galvo, float(
+                    config["laserZ"]), float(config("laserScale")))
 
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 

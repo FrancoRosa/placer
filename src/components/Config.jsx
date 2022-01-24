@@ -21,6 +21,7 @@ const Config = () => {
   const [laserX, setLaserX] = useState(localconfig.laserX);
   const [laserY, setLaserY] = useState(localconfig.laserY);
   const [laserZ, setLaserZ] = useState(localconfig.laserZ);
+  const [laserScale, setLaserScale] = useState(localconfig.laserScale);
   const [reference, setReference] = useState(localconfig.reference);
   const [epsg, setEpsg] = useState(localconfig.epsg);
   const [feedback, setFeedback] = useState("");
@@ -38,6 +39,7 @@ const Config = () => {
       laserX,
       laserY,
       laserZ,
+      laserScale,
       reference,
     };
     setLocalConfig(payload);
@@ -131,6 +133,12 @@ const Config = () => {
                   </div>
                 </div>
               </div>
+              <NumberInput
+                label="Scale"
+                value={laserScale}
+                placeholder="E.g: 1"
+                changeHandler={setLaserScale}
+              />
             </div>
           </div>
           <div className="columns">

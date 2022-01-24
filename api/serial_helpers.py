@@ -182,6 +182,7 @@ def set_lsr_blink(payload):
 
 def set_lsr_config(payload):
     send_to_laser('{floor()}')
+    send_to_laser('{cfg("flash",250,250)}')
     send_to_laser('{cfg("w", %s)}' % format_val(payload['w']))
     send_to_laser('{cfg("h", %s)}' % format_val(payload['h']))
     send_to_laser('{cfg("angle", %s)}' %
@@ -193,12 +194,16 @@ def set_lsr_config(payload):
     ))
 
 
-def draw_square(XYdistances, Zdistance):
+def draw_square(XYdistances, Zdistance, scale=1):
     send_to_laser('{target(%s, %s, %s)}' % (
-        format_val(XYdistances['y']),
+        format_val(XYdistances['y']*scale),
         format_val(-Zdistance),
-        format_val(XYdistances['x']),
+        format_val(XYdistances['x']*scale),
     ))
+    if (XYdistances['y'] < 5):
+        send_to_laser('{flash(1)}')
+    else:
+        send_to_laser('{flash(0)}')
 
 
 Thread(target=connect_laser).start()
