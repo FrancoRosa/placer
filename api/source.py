@@ -176,8 +176,10 @@ def set_location():
                 waypoint[laser_index], {'lat': laser[0], 'lng': laser[1]})
 
             if not manual_mode:
-                draw_square(laser_galvo, float(
-                    config["laserZ"]), float(config("laserScale")))
+                draw_square(
+                    laser_galvo,
+                    float(config["laserZ"]),
+                    float(config("laserScale")))
 
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 
