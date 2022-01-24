@@ -195,15 +195,16 @@ def set_lsr_config(payload):
 
 
 def draw_square(XYdistances, Zdistance, scale=1):
+    if scale == 0:
+        scale = 1
+
     send_to_laser('{target(%s, %s, %s)}' % (
-        format_val(XYdistances['y']*scale),
+        format_val(XYdistances['y']/scale),
         format_val(-Zdistance),
-        format_val(XYdistances['x']*scale),
+        format_val(XYdistances['x']/scale),
     ))
-    if (XYdistances['y'] < 5):
-        send_to_laser('{flash(1)}')
-    else:
-        send_to_laser('{flash(0)}')
+
+    send_to_laser('{flash(1)}' if XYdistances['y'] < 5 else '{flash(0)}')
 
 
 Thread(target=connect_laser).start()
