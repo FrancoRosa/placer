@@ -319,4 +319,45 @@ def moveLasers(height, laser1, laser2):
     # servoSerial.write(command)
 
 
+def get_middles(arr):
+    result = []
+    for i, e in enumerate(arr):
+        if i > 0:
+            result.append((e + arr[i - 1]) / 2.0)
+    return result
+
+
+def group_by_neighbor(arr, th):
+    result = []
+    last = 0
+    arr.sort()
+    for i, e in enumerate(arr):
+        if (i == 0):
+            last = e
+            result.append(e)
+        else:
+            if (e > th + last):
+                last = e
+                result.append(e)
+    return result
+
+
+def get_guides(points):
+    xs = list(lambda x: x["x"], points)
+    xs = group_by_neighbor(xs, 1)
+    middles = get_middles(xs)
+    ys = list(lambda x: x["y"], points)
+    min_y = min(ys)
+    max_y = max(ys)
+    lines = []
+    for i in middles:
+        line_start = [i, min_y]
+        line_end = [i, max_y]
+        lines.append({
+            "from": proj_to_wgs84(line_start),
+            "to": proj_to_wgs84(line_end)
+        })
+    return lines
+
+
 create_projs('2229')

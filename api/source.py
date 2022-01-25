@@ -5,7 +5,7 @@ from os import path
 from platform import system
 from werkzeug.utils import secure_filename
 
-from helpers import polygon, cvs_to_rows, rows_to_json, coordinate_distance
+from helpers import create_guides, polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
 from serial_helpers import get_laser, get_gps
 from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
@@ -242,6 +242,7 @@ def process_file():
             rows = xlsx_to_rows(filedir)
 
         waypoints = rows_to_json(rows, code)
+        create_guides(waypoints)
         rows_processed = len(waypoints)
     processing_file = False
     return send_response({
