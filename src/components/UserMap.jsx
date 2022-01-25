@@ -40,6 +40,7 @@ const UserMap = () => {
 
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
   const [autoCenter, setAutoCenter] = useState(true);
+  const [guides, setGuides] = useState();
   const [truck, setTruck] = useState([
     { lat: 0, lng: 0 },
     { lat: 0, lng: 0 },
@@ -101,7 +102,7 @@ const UserMap = () => {
       setWaypoints(
         res.waypoints.map((waypoint) => ({ ...waypoint, selected: true }))
       );
-      console.log("GUIDES:", getGuides(res.waypoints));
+      setGuides(getGuides(res.waypoints));
       if (res.waypoints.length > 0) {
         setCenter({ ...center, ...res.waypoints[0] });
         setViewState({
@@ -345,6 +346,14 @@ const UserMap = () => {
             getSourcePosition={(d) => d.from}
             getTargetPosition={(d) => d.to}
             getColor={[20, 140, 0]}
+          />
+          <LineLayer
+            data={guides}
+            widthUnits="meters"
+            getWidth={0.1}
+            getSourcePosition={(d) => d.from}
+            getTargetPosition={(d) => d.to}
+            getColor={[20, 140, 0, 100]}
           />
         </DeckGL>
       </div>

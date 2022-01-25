@@ -96,14 +96,13 @@ export const getGuides = (waypoints) => {
   lats = groupByNeighbor(lats, 0.000005);
   const middles = getMiddles(lats);
   const lngs = waypoints.map((x) => x.lat);
-  const minLng = Math.min(...lngs);
-  const maxLng = Math.max(...lngs);
-
-  return {
-    middles,
-    minLng,
-    maxLng,
-  };
+  const minLng = Math.min(...lngs) - 0.0001;
+  const maxLng = Math.max(...lngs) + 0.0001;
+  const lines = [];
+  middles.forEach((e) => {
+    lines.push({ from: [e, minLng], to: [e, maxLng] });
+  });
+  return lines;
 };
 
 const groupByNeighbor = (arr, th) => {
