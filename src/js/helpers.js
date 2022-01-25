@@ -90,3 +90,37 @@ export const getTime = (timestamp) => {
   const stamp = new Date(timestamp * 1000);
   return stamp.toLocaleString().split(", ")[1];
 };
+
+export const getGuides = (waypoints) => {
+  let lats = waypoints.map((x) => x.lng);
+  lats = groupByNeighbor(lats, 0.000005);
+
+  const lngs = waypoints.map((x) => x.lat);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+
+  return {
+    lats,
+    minLng,
+    maxLng,
+  };
+};
+
+export const groupByNeighbor = (arr, th) => {
+  let result = [];
+  let last;
+
+  arr.sort((a, b) => a - b);
+  arr.forEach((e, i) => {
+    if (i == 0) {
+      last = e;
+      result.push(e);
+    } else {
+      if (e > th + last) {
+        last = e;
+        result.push(e);
+      }
+    }
+  });
+  return result;
+};

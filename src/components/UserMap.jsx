@@ -10,7 +10,7 @@ import {
 import { StaticMap } from "react-map-gl";
 import { useEffect, useState } from "react";
 import { getWaypoints, setRefWaypoint, socket } from "../js/api";
-import { useLocalStorage, colors, colorsFill } from "../js/helpers";
+import { useLocalStorage, colors, colorsFill, getGuides } from "../js/helpers";
 import { playColor, playOther } from "../js/audio";
 import mapboxgl from "mapbox-gl";
 import marooka from "../assets/marooka-top.bmp";
@@ -101,6 +101,7 @@ const UserMap = () => {
       setWaypoints(
         res.waypoints.map((waypoint) => ({ ...waypoint, selected: true }))
       );
+      console.log("GUIDES:", getGuides(res.waypoints));
       if (res.waypoints.length > 0) {
         setCenter({ ...center, ...res.waypoints[0] });
         setViewState({
