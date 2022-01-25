@@ -94,19 +94,19 @@ export const getTime = (timestamp) => {
 export const getGuides = (waypoints) => {
   let lats = waypoints.map((x) => x.lng);
   lats = groupByNeighbor(lats, 0.000005);
-
+  const middles = getMiddles(lats);
   const lngs = waypoints.map((x) => x.lat);
   const minLng = Math.min(...lngs);
   const maxLng = Math.max(...lngs);
 
   return {
-    lats,
+    middles,
     minLng,
     maxLng,
   };
 };
 
-export const groupByNeighbor = (arr, th) => {
+const groupByNeighbor = (arr, th) => {
   let result = [];
   let last;
 
@@ -122,5 +122,15 @@ export const groupByNeighbor = (arr, th) => {
       }
     }
   });
+  return result;
+};
+
+const getMiddles = (arr) => {
+  const result = [];
+
+  arr.forEach((e, i) => {
+    if (i > 0) result.push((e + arr[i - 1]) / 2.0);
+  });
+
   return result;
 };
