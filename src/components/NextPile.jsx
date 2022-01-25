@@ -67,7 +67,7 @@ const NextPile = ({ index }) => {
             ft
           </p>
           <progress
-            class={`progress rotate ${progressColor}`}
+            className={`progress rotate ${progressColor}`}
             max="3"
             value={progressValue}
           />
