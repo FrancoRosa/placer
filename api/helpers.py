@@ -343,20 +343,22 @@ def group_by_neighbor(arr, th):
 
 
 def get_guides(points):
-    xs = list(lambda x: x["x"], points)
+    xs = list(map(lambda x: x["x"], points))
     xs = group_by_neighbor(xs, 1)
     middles = get_middles(xs)
-    ys = list(lambda x: x["y"], points)
-    min_y = min(ys)
-    max_y = max(ys)
+    ys = list(map(lambda x: x["y"], points))
+    min_y = min(ys) - 100
+    max_y = max(ys) + 100
     lines = []
     for i in middles:
-        line_start = [i, min_y]
-        line_end = [i, max_y]
+        start = proj_to_wgs84.transform(i, min_y)
+        end = proj_to_wgs84.transform(i, max_y)
         lines.append({
-            "from": proj_to_wgs84(line_start),
-            "to": proj_to_wgs84(line_end)
+            "from": [start[1], start[0]],
+            "to": [end[1], end[0]]
         })
+    print("_______lines______")
+    print(lines)
     return lines
 
 

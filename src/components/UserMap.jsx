@@ -102,7 +102,8 @@ const UserMap = () => {
       setWaypoints(
         res.waypoints.map((waypoint) => ({ ...waypoint, selected: true }))
       );
-      setGuides(getGuides(res.waypoints));
+      setGuides(res.guides);
+      console.log(res.guides);
       if (res.waypoints.length > 0) {
         setCenter({ ...center, ...res.waypoints[0] });
         setViewState({

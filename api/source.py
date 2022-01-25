@@ -5,7 +5,7 @@ from os import path
 from platform import system
 from werkzeug.utils import secure_filename
 
-from helpers import create_guides, polygon, cvs_to_rows, rows_to_json, coordinate_distance
+from helpers import get_guides, polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
 from serial_helpers import get_laser, get_gps
 from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
@@ -57,6 +57,7 @@ config = {
 }
 ref_bay = {}
 waypoint = []
+guides = []
 waypoints = []
 processing_file = False
 
@@ -90,7 +91,7 @@ def get_status():
 @app.route('/api/waypoints', methods=['get'])
 def get_waypoints():
     global waypoints
-    return send_response({"waypoints": waypoints})
+    return send_response({"waypoints": waypoints, "guides": guides})
 
 
 @app.route('/api/serial_ports', methods=['get'])
@@ -225,7 +226,7 @@ def set_waypoint():
 
 @ app.route('/api/file', methods=['post'])
 def process_file():
-    global waypoints, config, processing_file
+    global waypoints, config, processing_file, guides
     message = False
     rows_processed = 0
     processing_file = True
@@ -242,7 +243,7 @@ def process_file():
             rows = xlsx_to_rows(filedir)
 
         waypoints = rows_to_json(rows, code)
-        create_guides(waypoints)
+        guides = get_guides(waypoints)
         rows_processed = len(waypoints)
     processing_file = False
     return send_response({
