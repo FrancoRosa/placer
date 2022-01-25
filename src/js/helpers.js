@@ -93,7 +93,7 @@ export const getTime = (timestamp) => {
 
 export const getGuides = (waypoints) => {
   let lats = waypoints.map((x) => x.lng);
-  lats = groupByNeighbor(lats, 0.000005);
+  lats = groupByNeighbor(lats, 0.00003);
   const middles = getMiddles(lats);
   const lngs = waypoints.map((x) => x.lat);
   const minLng = Math.min(...lngs) - 0.0001;
