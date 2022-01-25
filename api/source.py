@@ -179,14 +179,14 @@ def set_location():
                 draw_square(
                     laser_galvo,
                     float(config["laserZ"]),
-                    float(config("laserScale")))
+                    float(config["laserScale"]))
 
         broadcast({**heading, **location, **truck, **bay_to_waypoint})
 
     return send_response({"message": True})
 
 
-@app.route('/api/heading', methods=['post'])
+@ app.route('/api/heading', methods=['post'])
 def set_heading():
     global heading
     heading = request.get_json()
@@ -194,7 +194,7 @@ def set_heading():
     return send_response({"message": True})
 
 
-@app.route('/api/config', methods=['post'])
+@ app.route('/api/config', methods=['post'])
 def set_config():
     global config
     config = {**config, **request.get_json()}
@@ -204,7 +204,7 @@ def set_config():
     })
 
 
-@app.route('/api/bay', methods=['post'])
+@ app.route('/api/bay', methods=['post'])
 def set_ref_bay():
     global ref_bay
     ref_bay = request.get_json()
@@ -213,7 +213,7 @@ def set_ref_bay():
     })
 
 
-@app.route('/api/waypoint', methods=['post'])
+@ app.route('/api/waypoint', methods=['post'])
 def set_waypoint():
     global waypoint
     waypoint = request.get_json()
@@ -223,7 +223,7 @@ def set_waypoint():
     })
 
 
-@app.route('/api/file', methods=['post'])
+@ app.route('/api/file', methods=['post'])
 def process_file():
     global waypoints, config, processing_file
     message = False

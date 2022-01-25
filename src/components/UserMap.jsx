@@ -35,6 +35,9 @@ const INITIAL_VIEW_STATE = {
 const UserMap = () => {
   const center = useStoreState((state) => state.center);
   const setCenter = useStoreActions((actions) => actions.setCenter);
+  const beep = useStoreState((state) => state.beep);
+  const setBeep = useStoreActions((actions) => actions.setBeep);
+
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
   const [autoCenter, setAutoCenter] = useState(true);
   const [truck, setTruck] = useState([
@@ -375,6 +378,14 @@ const UserMap = () => {
             disabled={bays[0].lat == bays[1].lat && bays[0].lng == bays[1].lng}
           >
             Get nearest piles
+          </button>
+          <button
+            className={`button is-outlined ${
+              beep ? "is-success" : "is-danger"
+            }`}
+            onClick={() => setBeep(!beep)}
+          >
+            Beep
           </button>
         </div>
       </div>

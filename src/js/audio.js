@@ -29,6 +29,11 @@ import leftBay from "../assets/audio/other/left_bay.mp3";
 import rightBay from "../assets/audio/other/right_bay.mp3";
 import nextPile from "../assets/audio/other/next_pile.mp3";
 
+import beep1 from "../assets/audio/beep/1beep.mp3";
+import beep2 from "../assets/audio/beep/2beep.mp3";
+import beep4 from "../assets/audio/beep/4beep.mp3";
+import beepi from "../assets/audio/beep/ibeep.mp3";
+
 const distanceSounds = [
   new Audio(one),
   new Audio(two),
@@ -66,6 +71,13 @@ const colorSounds = {
   brownwhite: new Audio(brownwhite),
 };
 
+const beepSounds = {
+  far: new Audio(beep1),
+  close: new Audio(beep2),
+  closer: new Audio(beep4),
+  target: new Audio(beepi),
+};
+
 export const playDistance = (distance) => {
   const dist = parseInt(distance);
   if (dist > 0 && dist < 11) {
@@ -79,4 +91,19 @@ export const playOther = (sound) => {
 
 export const playColor = (color) => {
   if (colorSounds[color]) colorSounds[color].play();
+};
+
+export const playBeep = (distance) => {
+  const range = {
+    far: 25,
+    close: 17,
+    closer: 10,
+    target: 3,
+  };
+  if (distance >= range.far) beepSounds.far.play();
+  if (distance < range.far && distance <= distance.close)
+    beepSounds.close.play();
+  if (distance < range.close && distance <= distance.closer)
+    beepSounds.closer.play();
+  if (distance < range.target) beepSounds.target.play();
 };

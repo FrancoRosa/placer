@@ -2,11 +2,12 @@ import { faFlag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { useEffect, useState } from "react";
-import { playColor, playOther } from "../js/audio";
+import { playBeep, playColor, playOther } from "../js/audio";
 
 const NextPile = ({ index }) => {
   const nextPiles = useStoreState((state) => state.nextPiles);
   const center = useStoreState((state) => state.center);
+  const beep = useStoreState((state) => state.beep);
   const placeWaypoint = useStoreActions((actions) => actions.placeWaypoint);
   const clearPile = useStoreActions((actions) => actions.clearPile);
   const [progressValue, setProgressValue] = useState(0);
@@ -33,6 +34,7 @@ const NextPile = ({ index }) => {
         setProgressColor("is-success");
         setProgressValue(3);
       }
+      if (beep) playBeep(distance);
     }
   }, [waypoint.distance]);
 

@@ -63,4 +63,8 @@ export default {
   setCenter: action((state, center) => {
     state.center = center;
   }),
+  beep: false,
+  setBeep: action((state, beep) => {
+    state.beep = beep;
+  }),
 };
