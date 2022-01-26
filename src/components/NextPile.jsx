@@ -39,16 +39,10 @@ const NextPile = ({ index }) => {
   }, [waypoint.distance]);
 
   return (
-    <div className="column">
+    <div className="column is-flex is-flex-centered is-flex-direction-column">
       {waypoint.pile_id && (
         <>
-          <div className="is-flex has-text-centered is-flex-direction-column is-align-content-center mb-4">
-            <p className="heading title is-5">Id: {waypoint.pile_id}</p>
-            <p className="heading f-4">Lat {waypoint.lat?.toFixed(8)}</p>
-            <p className="heading f-4">Lng {waypoint.lng?.toFixed(8)}</p>
-            <p className="heading f-4">N {waypoint.x}</p>
-            <p className="heading f-4">E {waypoint.y}</p>
-          </div>
+          <p className="heading title is-5 mb-4">Id: {waypoint.pile_id}</p>
           <div
             className="flag-icon color_red"
             onClick={() => {

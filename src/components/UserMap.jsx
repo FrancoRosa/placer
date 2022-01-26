@@ -41,6 +41,7 @@ const UserMap = () => {
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
   const [autoCenter, setAutoCenter] = useState(true);
   const [guides, setGuides] = useState();
+
   const [truck, setTruck] = useState([
     { lat: 0, lng: 0 },
     { lat: 0, lng: 0 },
@@ -165,6 +166,7 @@ const UserMap = () => {
     if (waypoints.length > 0) {
       const nearestPiles = getNearestPiles(waypoints, bays);
       setNextPiles(nearestPiles);
+
       setRefWaypoint(nearestPiles);
       console.log("... getting colors");
       let timeOffset = 0;
@@ -356,6 +358,14 @@ const UserMap = () => {
             getTargetPosition={(d) => d.to}
             getColor={[20, 140, 0, 100]}
           />
+          {/* <LineLayer
+            data={pointers}
+            widthUnits="meters"
+            getWidth={0.1}
+            getSourcePosition={(d) => d.from}
+            getTargetPosition={(d) => d.to}
+            getColor={[120, 40, 0, 100]}
+          /> */}
         </DeckGL>
       </div>
       <div className="columns mt-3 has-text-link ">
