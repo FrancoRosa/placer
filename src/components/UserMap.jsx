@@ -226,6 +226,25 @@ const UserMap = () => {
     else placeWaypoint(pile_id);
   };
 
+  const getPointers = (bays, targets) => {
+    return [
+      {
+        from: [bays[0].lng, bays[0].lat],
+        to:
+          targets[0].color == undefined
+            ? [bays[0].lng, bays[0].lat]
+            : [targets[0].lng, targets[0].lat],
+      },
+      {
+        from: [bays[1].lng, bays[1].lat],
+        to:
+          targets[1].color == undefined
+            ? [bays[1].lng, bays[1].lat]
+            : [targets[1].lng, targets[1].lat],
+      },
+    ];
+  };
+
   return (
     <>
       <div className="container map">
@@ -358,14 +377,14 @@ const UserMap = () => {
             getTargetPosition={(d) => d.to}
             getColor={[20, 140, 0, 100]}
           />
-          {/* <LineLayer
-            data={pointers}
+          <LineLayer
+            data={getPointers(bays, nextPiles)}
             widthUnits="meters"
             getWidth={0.1}
             getSourcePosition={(d) => d.from}
             getTargetPosition={(d) => d.to}
             getColor={[120, 40, 0, 100]}
-          /> */}
+          />
         </DeckGL>
       </div>
       <div className="columns mt-3 has-text-link ">
