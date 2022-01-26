@@ -20,8 +20,8 @@ const NextPile = ({ index }) => {
   };
 
   useEffect(() => {
-    if (center.distY !== undefined) {
-      let distance = Math.abs(center.distY[index]);
+    if (center.distance !== undefined) {
+      let distance = Math.abs(center.distance[index]);
       if (distance > 25) {
         setProgressColor("is-danger");
         setProgressValue(1);
@@ -62,8 +62,7 @@ const NextPile = ({ index }) => {
           </div>
           <p className="heading has-text-centered">{waypoint.color}</p>
           <p className="title is-3 has-text-centered mt-3 mb-4">
-            {center.distY !== undefined &&
-              Math.abs(center.distY[index]).toFixed(1)}{" "}
+            {center.distance !== undefined && center.distance[index].toFixed(1)}{" "}
             ft
           </p>
           <progress
