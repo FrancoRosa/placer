@@ -199,6 +199,7 @@ def polygon(center, heading, config):
     tLen = float(config['truckLen'])
     bay1 = float(config['bay1'])
     bay2 = float(config['bay2'])
+    fromCenter = float(config['fromCenter'])
     laserX = float(config['laserX'])
     laserY = float(config['laserY'])
     rot = radians(float(heading['heading']))
@@ -244,8 +245,10 @@ def polygon(center, heading, config):
         ],
         'bays': [
             # bay points
-            rotate_point(cenX - anX - 3, cenY + anY - bay1, rot),
-            rotate_point(cenX - anX + tWid + 3, cenY + anY - bay2, rot),
+            rotate_point(cenX - anX + tWid/2 - fromCenter,
+                         cenY + anY - bay1, rot),
+            rotate_point(cenX - anX + tWid - tWid/2 + fromCenter,
+                         cenY + anY - bay2, rot),
         ],
     }
 
@@ -357,8 +360,6 @@ def get_guides(points):
             "from": [start[1], start[0]],
             "to": [end[1], end[0]]
         })
-    print("_______lines______")
-    print(lines)
     return lines
 
 

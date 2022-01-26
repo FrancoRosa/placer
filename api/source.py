@@ -52,6 +52,7 @@ config = {
     'reference': 'bay1',
     'bay1': 0,
     'bay2': 0,
+    'fromCenter': 0,
     'epsg': '2229',
     'laser_manual': False
 }

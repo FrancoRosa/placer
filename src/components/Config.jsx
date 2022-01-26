@@ -18,6 +18,7 @@ const Config = () => {
   const [antennaY, setAntennaY] = useState(localconfig.antennaY);
   const [bay1, setBay1] = useState(localconfig.bay1);
   const [bay2, setBay2] = useState(localconfig.bay2);
+  const [fromCenter, setFromCenter] = useState(localconfig.fromCenter);
   const [laserX, setLaserX] = useState(localconfig.laserX);
   const [laserY, setLaserY] = useState(localconfig.laserY);
   const [laserZ, setLaserZ] = useState(localconfig.laserZ);
@@ -35,6 +36,7 @@ const Config = () => {
       antennaY,
       bay1,
       bay2,
+      fromCenter,
       epsg,
       laserX,
       laserY,
@@ -98,6 +100,12 @@ const Config = () => {
               value={bay2}
               placeholder="E.g: 5"
               changeHandler={setBay2}
+            />
+            <NumberInput
+              label="Distance from center"
+              value={fromCenter}
+              placeholder="E.g: 5"
+              changeHandler={setFromCenter}
             />
           </div>
           <hr style={{ margin: ".25em" }} />
