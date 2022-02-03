@@ -1,36 +1,24 @@
-import serial
 
-
-def numberToBase(n, b):
-    if n == 0:
-        return [0]
-    digits = []
-    while n:
-        digits.append(int(n % b))
-        n //= b
-    return digits[::-1]
+ser = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=1)
+print("connected to: " + ser.portstr)
 
 
 def get_degrees(arr):
     return((arr[1] << 8) | arr[0])/32768*180
 
 
-ser = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=1)
-
-print("connected to: " + ser.portstr)
-
+buffer = b'\x00'*22
 while True:
-    x = ser.readline(20)
-    r = []
-    if len(x) == 20:
-        for a in x:
-            num = int(a)
-            r.append(num)
-            print("%X" % num, sep=" ", end=" ")
-        roll = r[14:16]
-        pitch = r[16:18]
-        yaw = r[18:20]
-        print("\nroll: %.2f, pitch: %.2f, yaw: %.2f\n" %
-              (get_degrees(roll), get_degrees(pitch), get_degrees(yaw)))
+    x = ser.readline(1)
+    buffer = buffer[1:] + x
+    if buffer[-2:] == buffer[:2] == b'\x55\x61':
+        for i in buffer:
+            print("%X" % i, end=" ")
+        roll = [buffer[14], buffer[15]]
+        pitch = [buffer[16], buffer[17]]
+        yaw = [buffer[18], buffer[19]]
+        print("\nroll: %.2f, pitch: %.2f, yaw: %.2f\n"
+              % (get_degrees(roll), get_degrees(pitch), get_degrees(yaw))
+              )
 
 ser.close()

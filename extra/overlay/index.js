@@ -1,12 +1,7 @@
-var video = document.querySelector("#player");
+const video = document.getElementById("video");
+const button = document.getElementById("button");
+const select = document.getElementById("select");
 
-if (navigator.mediaDevices.getUserMedia) {
-  navigator.mediaDevices
-    .getUserMedia({ video: true })
-    .then(function (stream) {
-      video.srcObject = stream;
-    })
-    .catch(function (err0r) {
-      console.log("Something went wrong!");
-    });
-}
+navigator.mediaDevices.enumerateDevices().then((x) => {
+  console.log(x);
+});

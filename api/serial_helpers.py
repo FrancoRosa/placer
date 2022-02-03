@@ -11,9 +11,13 @@ url = 'http://localhost:9999'
 
 laser_connected = False
 laser_port = None
+
 gps_connected = False
 gps_port = None
 gps_logs = []
+
+compass_connected = False
+compass_port = None
 
 
 def format_val(txt, to_ft=True):
@@ -141,6 +145,49 @@ def connect_gps():
                     elapsed = end - start
                     if elapsed > timeout:
                         break
+            except Exception as error:
+                error_string = str(error)
+                print(error_string)
+            sleep(1)
+        sleep(5)
+
+
+def get_degrees(arr):
+    angle = ((arr[1] << 8) | arr[0])/32768*180
+    return angle if angle > 0 else 360-angle
+
+
+def connect_compass():
+    global compass_connected, compass_port
+    sleep(6)
+    test_command = b'\x55\x61'
+    while True:
+        ports = available_ports()
+        print(ports)
+        for test_port in ports:
+            try:
+                compass_connected = False
+                timeout = 1
+                compass_port = serial.Serial(
+                    test_port, baudrate=115200, timeout=timeout)
+                while True:
+                    response = gps_port.readline(20)
+
+                    if test_command in response:
+                        compass_connected = True
+                        print("... compass connected at:", test_port)
+                        buffer = b'\x00'*22
+                        while compass_connected:
+                            x = compass_port.readline(1)
+                            buffer = buffer[1:] + x
+                            if buffer[-2:] == buffer[:2] == b'\x55\x61':
+                                yaw = [buffer[18], buffer[19]]
+                                print("\nyaw: %.2f\n" % get_degrees(yaw))
+                            try:
+                                response = response.decode()
+                            except:
+                                response = ''
+
             except Exception as error:
                 error_string = str(error)
                 print(error_string)
