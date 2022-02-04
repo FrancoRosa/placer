@@ -18,6 +18,7 @@ gps_logs = []
 
 compass_connected = False
 compass_port = None
+compass_yaw = 0
 
 
 def format_val(txt, to_ft=True):
@@ -104,6 +105,7 @@ def connect_laser():
             except Exception as error:
                 print(str(error))
                 print("... laser serial error")
+                pass
             sleep(1)
         sleep(5)
 
@@ -148,6 +150,8 @@ def connect_gps():
             except Exception as error:
                 error_string = str(error)
                 print(error_string)
+                print("... gps serial error")
+                pass
             sleep(1)
         sleep(5)
 
@@ -158,7 +162,7 @@ def get_degrees(arr):
 
 
 def connect_compass():
-    global compass_connected, compass_port
+    global compass_connected, compass_port, compass_yaw
     sleep(6)
     test_command = b'\x55\x61'
     while True:
@@ -181,8 +185,7 @@ def connect_compass():
                             x = compass_port.readline(1)
                             buffer = buffer[1:] + x
                             if buffer[-2:] == buffer[:2] == b'\x55\x61':
-                                yaw = [buffer[18], buffer[19]]
-                                print("\nyaw: %.2f\n" % get_degrees(yaw))
+                                compass_yaw = [buffer[18], buffer[19]]
                             try:
                                 response = response.decode()
                             except:
@@ -191,19 +194,26 @@ def connect_compass():
             except Exception as error:
                 error_string = str(error)
                 print(error_string)
+                print("... compass serial error")
+                pass
             sleep(1)
         sleep(5)
 
 
 def gps_frame_processor(line):
+    global compass_connected, compass_yaw
+
     if b'$GNGGA' in line:
         location = get_latlng(line)
         post(url+'/api/location', json=location)
 
-    if b'$GNVTG' in line:
-        heading = get_course(line)
-        if heading['heading'] != None:
-            post(url+'/api/heading', json=heading)
+    if compass_connected:
+        post(url+'/api/heading', json={'heading': compass_yaw})
+    else:
+        if b'$GNVTG' in line:
+            heading = get_course(line)
+            if heading['heading'] != None:
+                post(url+'/api/heading', json=heading)
 
 
 def get_laser():
@@ -254,6 +264,6 @@ def draw_square(XYdistances, Zdistance, scale=1):
     send_to_laser('{flash(1)}' if XYdistances['y'] < 5 else '{flash(0)}')
 
 
-Thread(target=connect_laser).start()
+# Thread(target=connect_laser).start()
 Thread(target=connect_compass).start()
 Thread(target=connect_gps).start()
