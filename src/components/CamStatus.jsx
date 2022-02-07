@@ -4,16 +4,22 @@ import NumberInput from "./NumberInput";
 const CamStatus = () => {
   const [devices, setDevices] = useState([]);
   const [crop, setCrop] = useState(200);
-  const [camWidth, setCamWidth] = useState(200);
+  const [camWidth, setCamWidth] = useState(100);
   const [camLength, setCamLength] = useState(200);
+  const [antennaX, setAntennaX] = useState(50);
+  const [antennaY, setAntennaY] = useState(100);
   const vidReference = useRef();
+  const videoHigh = 400;
+  const videoWidth = 600;
+  const kX = crop / camWidth;
+  const kY = videoHigh / camLength;
 
   const handleCam = (device) => {
     const constrains = {
       video: {
         deviceId: device.deviceId,
-        width: 600,
-        height: 400,
+        width: videoHigh,
+        height: videoWidth,
       },
     };
     console.log(constrains);
@@ -84,7 +90,7 @@ const CamStatus = () => {
           </div>
           <div className="columns">
             <NumberInput
-              label="Crop from right"
+              label="Crop from right (px)"
               value={crop}
               placeholder="E.g: 100"
               changeHandler={setCrop}
@@ -101,19 +107,53 @@ const CamStatus = () => {
               placeholder="E.g: 40"
               changeHandler={setCamLength}
             />
+            <NumberInput
+              label="Antenna X position(ft)"
+              value={antennaX}
+              placeholder="E.g: 40"
+              changeHandler={setAntennaX}
+            />
+            <NumberInput
+              label="Antenna Y position (ft)"
+              value={antennaY}
+              placeholder="E.g: 40"
+              changeHandler={setAntennaY}
+            />
           </div>
           <hr />
-          <div className="is-flex is-flex-centered">
-            <div style={{ width: `${crop}px`, height: "800px" }}>
-              <video
-                autoPlay
-                ref={vidReference}
-                style={{
-                  position: "absolute",
-                  clip: `rect(0, ${crop}px, 400px, 0)`,
-                }}
-              />
+          <div className="is-flex is-flex-centered is-flex-direction-column">
+            <div className="is-flex is-flex-centered is-flex-direction-vertical">
+              <p className="m-4" style={{ transform: "rotate(-90deg)" }}>
+                {camLength} ft
+              </p>
+              <div style={{ width: `${crop}px`, height: `${videoHigh}px` }}>
+                <video
+                  autoPlay
+                  ref={vidReference}
+                  style={{
+                    position: "absolute",
+                    clip: `rect(0, ${crop}px, ${videoHigh}px, 0)`,
+                  }}
+                />
+                <div
+                  className="is-flex is-flex-centered m-0 p-0"
+                  style={{
+                    backgroundColor: "lime",
+                    width: "18px",
+                    height: "18px",
+                    position: "absolute",
+                    transform: `translateX(${
+                      antennaX * kX - 9
+                    }px ) translateY(${antennaY * kY - 9}px)`,
+                    borderRadius: "50%",
+                    color: "black",
+                  }}
+                >
+                  A
+                </div>
+              </div>
             </div>
+            <p className="m-1">{camWidth} ft</p>
           </div>
         </div>
       </div>
