@@ -103,16 +103,17 @@ const CamStatus = () => {
             />
           </div>
           <hr />
-          <div
-            style={{
-              width: `${crop}px`,
-              overflow: "hidden",
-              display: "block",
-              height: "400px",
-              objectFit: "none",
-            }}
-          >
-            <video autoPlay ref={vidReference} />
+          <div className="is-flex is-flex-centered">
+            <div style={{ width: `${crop}px`, height: "800px" }}>
+              <video
+                autoPlay
+                ref={vidReference}
+                style={{
+                  position: "absolute",
+                  clip: `rect(0, ${crop}px, 400px, 0)`,
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
