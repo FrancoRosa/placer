@@ -251,7 +251,7 @@ const UserMap = () => {
 
   return (
     <>
-      <div className="is-flex">
+      <div className="is-flex is-flex-centered">
         <div className="container map">
           <DeckGL
             initialViewState={viewState}
