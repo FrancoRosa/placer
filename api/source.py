@@ -141,6 +141,7 @@ def set_laser_blink():
 def set_location():
     global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file
     location = request.get_json()
+    print("LCATION:", location)
     if not(processing_file):
         truck = polygon(location, heading, config)
         if len(waypoint) > 0:
@@ -149,11 +150,14 @@ def set_location():
                 waypoint[0], {'lat': bays[0][0], 'lng': bays[0][1]})
             bay2dist = coordinate_distance(
                 waypoint[1], {'lat': bays[1][0], 'lng': bays[1][1]})
+            centDist1 = coordinate_distance(waypoint[0], location)
+            centDist2 = coordinate_distance(waypoint[1], location)
 
             bay_to_waypoint = {
                 "distance": [bay1dist["abs"], bay2dist["abs"]],
                 "distX": [bay1dist["x"], bay2dist["x"]],
                 "distY": [bay1dist["y"], bay2dist["y"]],
+                "centDist": [centDist1, centDist2]
             }
             if rpi:
                 rgb_matrix(waypoint, bay_to_waypoint)

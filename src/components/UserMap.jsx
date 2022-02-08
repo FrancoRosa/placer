@@ -14,6 +14,7 @@ import { useLocalStorage, colors, colorsFill, getGuides } from "../js/helpers";
 import { playColor, playOther } from "../js/audio";
 import mapboxgl from "mapbox-gl";
 import marooka from "../assets/marooka-top.bmp";
+import CamDisplay from "./CamDisplay";
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass =
@@ -38,8 +39,11 @@ const UserMap = () => {
   const beep = useStoreState((state) => state.beep);
   const setBeep = useStoreActions((actions) => actions.setBeep);
 
+  const [camConfig, setCamConfig] = useLocalStorage("camConfig", {});
+
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
   const [autoCenter, setAutoCenter] = useState(true);
+  const [cam, setCam] = useState(false);
   const [guides, setGuides] = useState();
 
   const [truck, setTruck] = useState([
@@ -247,145 +251,148 @@ const UserMap = () => {
 
   return (
     <>
-      <div className="container map">
-        <DeckGL
-          initialViewState={viewState}
-          controller={true}
-          getTooltip={({ object }) =>
-            object &&
-            `Code: ${object.pile_id}\nColor: ${object.color}\n${
-              object.placed ? "Placed" : "Not Placed"
-            }`
-          }
-        >
-          <StaticMap mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
-          <MapView
-            x={"80%"}
-            y={"80%"}
-            height={"15%"}
-            width={"15%"}
-            clear={true}
-            controller
-          />
-          <ScatterplotLayer
-            lineWidthMaxPixels={3}
-            lineWidthMinPixels={2}
-            getRadius={(d) => (d.selected ? (d.placed ? 0.3 : 1) : 0.01)}
-            data={waypoints}
-            getPosition={(d) => [d.lng, d.lat]}
-            getColor={(d) => colors[d.color]}
-            getFillColor={(d) => colorsFill[d.color]}
-            getLineColor={(d) => colors[d.color]}
-            filled={true}
-            stroked={true}
-            pickable={true}
-            opacity={0.8}
-            onClick={handlePileClick}
-          />
+      <div className="is-flex">
+        <div className="container map">
+          <DeckGL
+            initialViewState={viewState}
+            controller={true}
+            getTooltip={({ object }) =>
+              object &&
+              `Code: ${object.pile_id}\nColor: ${object.color}\n${
+                object.placed ? "Placed" : "Not Placed"
+              }`
+            }
+          >
+            <StaticMap mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+            <MapView
+              x={"80%"}
+              y={"80%"}
+              height={"15%"}
+              width={"15%"}
+              clear={true}
+              controller
+            />
+            <ScatterplotLayer
+              lineWidthMaxPixels={3}
+              lineWidthMinPixels={2}
+              getRadius={(d) => (d.selected ? (d.placed ? 0.3 : 1) : 0.01)}
+              data={waypoints}
+              getPosition={(d) => [d.lng, d.lat]}
+              getColor={(d) => colors[d.color]}
+              getFillColor={(d) => colorsFill[d.color]}
+              getLineColor={(d) => colors[d.color]}
+              filled={true}
+              stroked={true}
+              pickable={true}
+              opacity={0.8}
+              onClick={handlePileClick}
+            />
 
-          <BitmapLayer
-            bounds={[
-              [truck[3].lng, truck[3].lat, 0],
-              [truck[0].lng, truck[0].lat, 0],
-              [truck[1].lng, truck[1].lat, 0],
-              [truck[2].lng, truck[2].lat, 0],
-            ]}
-            image={marooka}
-          />
+            <BitmapLayer
+              bounds={[
+                [truck[3].lng, truck[3].lat, 0],
+                [truck[0].lng, truck[0].lat, 0],
+                [truck[1].lng, truck[1].lat, 0],
+                [truck[2].lng, truck[2].lat, 0],
+              ]}
+              image={marooka}
+            />
 
-          <ScatterplotLayer
-            lineWidthMaxPixels={2}
-            lineWidthMinPixels={1}
-            getRadius={0.3}
-            data={[
-              // gps center
-              {
-                coordinates: [parseFloat(center.lng), parseFloat(center.lat)],
-                color: colors.black,
-                height: 10,
-              },
-              // laser positions
-              // {
-              //   coordinates: [center.truck[12][1], center.truck[12][0]],
-              //   color: colors.green,
-              //   height: 10,
-              // },
-              // {
-              //   coordinates: [center.truck[13][1], center.truck[13][0]],
-              //   color: colors.green,
-              //   height: 10,
-              // },
-              // galvo laser
-              {
-                coordinates: [center.truck[14][1], center.truck[14][0]],
-                color: colors.green,
-                height: 10,
-              },
-              // Bays positions
-              {
-                coordinates: [bays[0].lng, bays[0].lat],
-                color: colors.red,
-                height: 0,
-              },
-              {
-                coordinates: [bays[1].lng, bays[1].lat],
-                color: colors.red,
-                height: 0,
-              },
-            ]}
-            getPosition={(d) => d.coordinates}
-            getColor={(d) => d.color}
-            filled={false}
-            stroked
-          />
+            <ScatterplotLayer
+              lineWidthMaxPixels={2}
+              lineWidthMinPixels={1}
+              getRadius={0.3}
+              data={[
+                // gps center
+                {
+                  coordinates: [parseFloat(center.lng), parseFloat(center.lat)],
+                  color: colors.black,
+                  height: 10,
+                },
+                // laser positions
+                // {
+                //   coordinates: [center.truck[12][1], center.truck[12][0]],
+                //   color: colors.green,
+                //   height: 10,
+                // },
+                // {
+                //   coordinates: [center.truck[13][1], center.truck[13][0]],
+                //   color: colors.green,
+                //   height: 10,
+                // },
+                // galvo laser
+                {
+                  coordinates: [center.truck[14][1], center.truck[14][0]],
+                  color: colors.green,
+                  height: 10,
+                },
+                // Bays positions
+                {
+                  coordinates: [bays[0].lng, bays[0].lat],
+                  color: colors.red,
+                  height: 0,
+                },
+                {
+                  coordinates: [bays[1].lng, bays[1].lat],
+                  color: colors.red,
+                  height: 0,
+                },
+              ]}
+              getPosition={(d) => d.coordinates}
+              getColor={(d) => d.color}
+              filled={false}
+              stroked
+            />
 
-          <PolygonLayer
-            data={[
-              {
-                contour: [
-                  [truck[0].lng, truck[0].lat],
-                  [truck[1].lng, truck[1].lat],
-                  [truck[2].lng, truck[2].lat],
-                  [truck[3].lng, truck[3].lat],
-                ],
-              },
-            ]}
-            stroked
-            filled
-            wireframe
-            extruded
-            lineWidthMinPixels={1}
-            getPolygon={(d) => d.contour}
-            getFillColor={colorsFill.lightgreen}
-            getLineColor={colors.lightgreen}
-            getLineWidth={0.1}
-            getElevation={0.5}
-          />
-          <LineLayer
-            data={verticalLine}
-            widthUnits="meters"
-            getWidth={0.3}
-            getSourcePosition={(d) => d.from}
-            getTargetPosition={(d) => d.to}
-            getColor={[20, 140, 0]}
-          />
-          <LineLayer
-            data={guides}
-            widthUnits="meters"
-            getWidth={0.1}
-            getSourcePosition={(d) => d.from}
-            getTargetPosition={(d) => d.to}
-            getColor={[20, 140, 0, 100]}
-          />
-          <LineLayer
-            data={getPointers(bays, nextPiles)}
-            widthUnits="meters"
-            getWidth={0.1}
-            getSourcePosition={(d) => d.from}
-            getTargetPosition={(d) => d.to}
-            getColor={[120, 40, 0, 100]}
-          />
-        </DeckGL>
+            <PolygonLayer
+              data={[
+                {
+                  contour: [
+                    [truck[0].lng, truck[0].lat],
+                    [truck[1].lng, truck[1].lat],
+                    [truck[2].lng, truck[2].lat],
+                    [truck[3].lng, truck[3].lat],
+                  ],
+                },
+              ]}
+              stroked
+              filled
+              wireframe
+              extruded
+              lineWidthMinPixels={1}
+              getPolygon={(d) => d.contour}
+              getFillColor={colorsFill.lightgreen}
+              getLineColor={colors.lightgreen}
+              getLineWidth={0.1}
+              getElevation={0.5}
+            />
+            <LineLayer
+              data={verticalLine}
+              widthUnits="meters"
+              getWidth={0.3}
+              getSourcePosition={(d) => d.from}
+              getTargetPosition={(d) => d.to}
+              getColor={[20, 140, 0]}
+            />
+            <LineLayer
+              data={guides}
+              widthUnits="meters"
+              getWidth={0.1}
+              getSourcePosition={(d) => d.from}
+              getTargetPosition={(d) => d.to}
+              getColor={[20, 140, 0, 100]}
+            />
+            <LineLayer
+              data={getPointers(bays, nextPiles)}
+              widthUnits="meters"
+              getWidth={0.1}
+              getSourcePosition={(d) => d.from}
+              getTargetPosition={(d) => d.to}
+              getColor={[120, 40, 0, 100]}
+            />
+          </DeckGL>
+        </div>
+        {cam && <CamDisplay config={camConfig} />}
       </div>
       <div className="columns mt-3 has-text-link ">
         <div className="column is-flex is-flex-centered m-0 p-0">
@@ -426,6 +433,14 @@ const UserMap = () => {
             onClick={() => setBeep(!beep)}
           >
             Beep
+          </button>
+          <button
+            className={`ml-2 button is-outlined ${
+              cam ? "is-success" : "is-danger"
+            }`}
+            onClick={() => setCam(!cam)}
+          >
+            Cam
           </button>
         </div>
       </div>

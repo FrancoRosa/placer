@@ -22,6 +22,8 @@ const CamStatus = () => {
     let kY = videoHigh / camLength;
     setCamConfig({
       crop,
+      videoHigh,
+      videoWidth,
       camWidth,
       camLength,
       antennaX,
