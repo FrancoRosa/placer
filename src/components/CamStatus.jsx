@@ -1,18 +1,36 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocalStorage } from "../js/helpers";
 import NumberInput from "./NumberInput";
 
 const CamStatus = () => {
+  const [camConfig, setCamConfig] = useLocalStorage("camConfig", {});
   const [devices, setDevices] = useState([]);
-  const [crop, setCrop] = useState(200);
-  const [camWidth, setCamWidth] = useState(100);
-  const [camLength, setCamLength] = useState(200);
-  const [antennaX, setAntennaX] = useState(50);
-  const [antennaY, setAntennaY] = useState(100);
+  const [crop, setCrop] = useState(camConfig.crop);
+  const [camera, setCamera] = useState(camConfig.camera);
+  const [camWidth, setCamWidth] = useState(camConfig.camWidth);
+  const [camLength, setCamLength] = useState(camConfig.camLength);
+  const [antennaX, setAntennaX] = useState(camConfig.antennaX);
+  const [antennaY, setAntennaY] = useState(camConfig.antennaY);
   const vidReference = useRef();
   const videoHigh = 400;
   const videoWidth = 600;
-  const kX = crop / camWidth;
-  const kY = videoHigh / camLength;
+  let kX = crop / camWidth;
+  let kY = videoHigh / camLength;
+
+  const handleSave = () => {
+    let kX = crop / camWidth;
+    let kY = videoHigh / camLength;
+    setCamConfig({
+      crop,
+      camWidth,
+      camLength,
+      antennaX,
+      antennaY,
+      kX,
+      kY,
+      camera,
+    });
+  };
 
   const handleCam = (device) => {
     const constrains = {
@@ -22,10 +40,10 @@ const CamStatus = () => {
         height: videoWidth,
       },
     };
-    console.log(constrains);
     navigator.mediaDevices.getUserMedia(constrains).then((s) => {
       vidReference.current.srcObject = s;
     });
+    setCamera(device);
   };
 
   useEffect(() => {
@@ -71,6 +89,18 @@ const CamStatus = () => {
       });
     };
     getMediaDevices().then((res) => setDevices(res.devices));
+    if (camera !== null) {
+      const constrains = {
+        video: {
+          deviceId: camera.deviceId,
+          width: videoHigh,
+          height: videoWidth,
+        },
+      };
+      navigator.mediaDevices.getUserMedia(constrains).then((s) => {
+        vidReference.current.srcObject = s;
+      });
+    }
   }, []);
 
   return (
@@ -119,6 +149,14 @@ const CamStatus = () => {
               placeholder="E.g: 40"
               changeHandler={setAntennaY}
             />
+            <div className="is-flex is-flex-centered">
+              <button
+                onClick={handleSave}
+                className="button is-outlined is-success ml-4 mt-4"
+              >
+                Save
+              </button>
+            </div>
           </div>
           <hr />
           <div className="is-flex is-flex-centered is-flex-direction-column">
@@ -138,19 +176,18 @@ const CamStatus = () => {
                 <div
                   className="is-flex is-flex-centered m-0 p-0"
                   style={{
-                    backgroundColor: "lime",
-                    width: "18px",
-                    height: "18px",
+                    width: "10px",
+                    height: "10px",
                     position: "absolute",
                     transform: `translateX(${
-                      antennaX * kX - 9
-                    }px ) translateY(${antennaY * kY - 9}px)`,
-                    borderRadius: "50%",
+                      antennaX * kX - 5
+                    }px ) translateY(${antennaY * kY - 5}px)`,
                     color: "black",
+                    borderStyle: "solid",
+                    borderColor: "lime",
+                    borderRadius: "50%",
                   }}
-                >
-                  A
-                </div>
+                />
               </div>
             </div>
             <p className="m-1">{camWidth} ft</p>
