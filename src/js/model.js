@@ -59,6 +59,7 @@ export default {
     ],
     distY: [0, 0],
     distX: [0, 0],
+    centDist: [{}, {}],
   },
   setCenter: action((state, center) => {
     state.center = center;
