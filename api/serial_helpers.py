@@ -185,7 +185,9 @@ def connect_compass():
                             x = compass_port.readline(1)
                             buffer = buffer[1:] + x
                             if buffer[-2:] == buffer[:2] == b'\x55\x61':
-                                compass_yaw = [buffer[18], buffer[19]]
+                                compass_yaw = get_degrees(
+                                    [buffer[18], buffer[19]]
+                                )
                             try:
                                 response = response.decode()
                             except:
