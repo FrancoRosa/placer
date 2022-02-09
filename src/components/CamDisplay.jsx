@@ -50,16 +50,18 @@ const CamDisplay = ({ config }) => {
   }, [center]);
 
   useEffect(() => {
-    const constrains = {
-      video: {
-        deviceId: config.camera.deviceId,
-        width: config.videoHigh,
-        height: config.videoWidth,
-      },
-    };
-    navigator.mediaDevices.getUserMedia(constrains).then((s) => {
-      videoRef.current.srcObject = s;
-    });
+    if (config.camera !== undefined) {
+      const constrains = {
+        video: {
+          deviceId: config.camera.deviceId,
+          width: config.videoHigh,
+          height: config.videoWidth,
+        },
+      };
+      navigator.mediaDevices.getUserMedia(constrains).then((s) => {
+        videoRef.current.srcObject = s;
+      });
+    }
   }, []);
 
   return (

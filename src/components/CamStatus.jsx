@@ -91,7 +91,7 @@ const CamStatus = () => {
       });
     };
     getMediaDevices().then((res) => setDevices(res.devices));
-    if (camera !== null) {
+    if (camera !== undefined) {
       const constrains = {
         video: {
           deviceId: camera.deviceId,
