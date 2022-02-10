@@ -127,7 +127,8 @@ def connect_gps():
                 while True:
                     response = gps_port.readline()
 
-                    if test_command in response:
+                    # if test_command in response:
+                    if test_port == '/dev/ttyACM0':
                         gps_connected = True
                         print("... gps connected at:", test_port)
                         while gps_connected:
