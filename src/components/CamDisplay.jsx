@@ -59,7 +59,7 @@ const CamDisplay = ({ config }) => {
     <div
       style={{
         width: `${config.crop / 2}px`,
-        height: `${config.videoHigh / 2}px`,
+        height: `${config.videoHigh / 4}px`,
       }}
     >
       <div
@@ -70,7 +70,7 @@ const CamDisplay = ({ config }) => {
           margin: "0",
           transform: `scale(0.5) translateX(${
             -config.crop / 2
-          }px) translateY(180px)`,
+          }px) translateY(-100px)`,
         }}
       >
         <video
