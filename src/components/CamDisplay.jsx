@@ -1,12 +1,13 @@
 import { useStoreState } from "easy-peasy";
 import { useEffect, useRef, useState } from "react";
+import { ScaleControl } from "react-map-gl";
 
 const CamDisplay = ({ config }) => {
   const videoRef = useRef();
   const center = useStoreState((state) => state.center);
   const antennaXY = {
-    x: config.antennaX * config.kX - 10,
-    y: config.antennaY * config.kY - 10,
+    x: config.antennaX * config.kX - 5,
+    y: config.antennaY * config.kY - 5,
   };
   const [pile0, setPile0] = useState({ x: -4, y: -4 });
   const [pile1, setPile1] = useState({ x: 4, y: 4 });
@@ -45,8 +46,8 @@ const CamDisplay = ({ config }) => {
       const constrains = {
         video: {
           deviceId: config.camera.deviceId,
-          width: config.videoHigh,
-          height: config.videoWidth,
+          width: config.videoWidth,
+          height: config.videoHight,
         },
       };
       navigator.mediaDevices.getUserMedia(constrains).then((s) => {
@@ -56,21 +57,12 @@ const CamDisplay = ({ config }) => {
   }, []);
 
   return (
-    <div
-      style={{
-        width: `${config.crop / 2}px`,
-        height: `${config.videoHigh / 4}px`,
-      }}
-    >
+    <div>
       <div
         className="vid-container"
         style={{
           width: `${config.crop}px`,
-          maxHeight: `${config.videoHigh / 2}px`,
-          margin: "0",
-          transform: `scale(0.5) translateX(${
-            -config.crop / 2
-          }px) translateY(-100px)`,
+          height: `${config.videoHight}px`,
         }}
       >
         <video
@@ -78,15 +70,15 @@ const CamDisplay = ({ config }) => {
           ref={videoRef}
           style={{
             position: "absolute",
-            clip: `rect(0, ${config.crop}px, ${config.videoHigh}px, 0)`,
+            clip: `rect(0, ${config.crop}px, ${config.videoHight}px, 0)`,
           }}
         />
         {/* Center indicator */}
         <div
           className="is-flex is-flex-centered m-0 p-0"
           style={{
-            width: "20px",
-            height: "20px",
+            width: "10px",
+            height: "10px",
             position: "absolute",
             transform: `translateX(${antennaXY.x}px) translateY(${antennaXY.y}px)`,
             color: "black",
@@ -100,8 +92,8 @@ const CamDisplay = ({ config }) => {
         <div
           className="is-flex is-flex-centered m-0 p-0"
           style={{
-            width: "20px",
-            height: "20px",
+            width: "10px",
+            height: "10px",
             position: "absolute",
             transform: `translateX(${pile0.x}px) translateY(${pile0.y}px)`,
             color: "black",
@@ -114,8 +106,8 @@ const CamDisplay = ({ config }) => {
         <div
           className="is-flex is-flex-centered m-0 p-0"
           style={{
-            width: "20px",
-            height: "20px",
+            width: "10px",
+            height: "10px",
             position: "absolute",
             transform: `translateX(${pile1.x}px) translateY(${pile1.y}px)`,
             color: "black",

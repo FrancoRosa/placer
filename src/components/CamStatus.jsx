@@ -12,17 +12,17 @@ const CamStatus = () => {
   const [antennaX, setAntennaX] = useState(camConfig.antennaX);
   const [antennaY, setAntennaY] = useState(camConfig.antennaY);
   const vidReference = useRef();
-  const videoHigh = 1080;
-  const videoWidth = 1920;
+  const [videoHight, setVideoHight] = useState(camConfig.videoHight);
+  const [videoWidth, setVideoWidth] = useState(camConfig.videoWidth);
   let kX = crop / camWidth;
-  let kY = videoHigh / camLength;
+  let kY = videoHight / camLength;
 
   const handleSave = () => {
     let kX = crop / camWidth;
-    let kY = videoHigh / camLength;
+    let kY = videoHight / camLength;
     setCamConfig({
       crop,
-      videoHigh,
+      videoHight,
       videoWidth,
       camWidth,
       camLength,
@@ -38,8 +38,8 @@ const CamStatus = () => {
     const constrains = {
       video: {
         deviceId: device.deviceId,
-        width: videoHigh,
-        height: videoWidth,
+        width: videoWidth,
+        height: videoHight,
       },
     };
     navigator.mediaDevices.getUserMedia(constrains).then((s) => {
@@ -95,8 +95,8 @@ const CamStatus = () => {
       const constrains = {
         video: {
           deviceId: camera.deviceId,
-          width: videoHigh,
-          height: videoWidth,
+          width: videoWidth,
+          height: videoHight,
         },
       };
       navigator.mediaDevices.getUserMedia(constrains).then((s) => {
@@ -119,6 +119,20 @@ const CamStatus = () => {
                 {device.label}
               </button>
             ))}
+          </div>
+          <div className="columns">
+            <NumberInput
+              label="Video Width (px)"
+              value={videoWidth}
+              placeholder="E.g: 800"
+              changeHandler={setVideoWidth}
+            />
+            <NumberInput
+              label="VideoHight (px)"
+              value={videoHight}
+              placeholder="E.g: 600"
+              changeHandler={setVideoHight}
+            />
           </div>
           <div className="columns">
             <NumberInput
@@ -169,7 +183,7 @@ const CamStatus = () => {
               <div
                 style={{
                   width: `${crop}px`,
-                  height: `${videoHigh}px`,
+                  height: `${videoHight}px`,
                 }}
               >
                 <video
@@ -177,7 +191,7 @@ const CamStatus = () => {
                   ref={vidReference}
                   style={{
                     position: "absolute",
-                    clip: `rect(0, ${crop}px, ${videoHigh}px, 0)`,
+                    clip: `rect(0, ${crop}px, ${videoHight}px, 0)`,
                   }}
                 />
                 <div
