@@ -256,4 +256,5 @@ def process_file():
     })
 
 
-app.run(debug=False, port=port, host='0.0.0.0')
+app.run(debug=False, port=port, host='0.0.0.0',
+        ssl_context=('cert/server.crt', 'cert/server.key'))
