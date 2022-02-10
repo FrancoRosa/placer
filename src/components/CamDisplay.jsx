@@ -5,8 +5,8 @@ const CamDisplay = ({ config }) => {
   const videoRef = useRef();
   const center = useStoreState((state) => state.center);
   const antennaXY = {
-    x: config.antennaX * config.kX - 5,
-    y: config.antennaY * config.kY - 5,
+    x: config.antennaX * config.kX - 10,
+    y: config.antennaY * config.kY - 10,
   };
   const [pile0, setPile0] = useState({ x: -4, y: -4 });
   const [pile1, setPile1] = useState({ x: 4, y: 4 });
@@ -56,9 +56,22 @@ const CamDisplay = ({ config }) => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        width: `${config.crop / 2}px`,
+        height: `${config.videoHigh / 2}px`,
+      }}
+    >
       <div
-        style={{ width: `${config.crop}px`, height: `${config.videoHigh}px` }}
+        className="vid-container"
+        style={{
+          width: `${config.crop}px`,
+          maxHeight: `${config.videoHigh / 2}px`,
+          margin: "0",
+          transform: `scale(0.5) translateX(${
+            -config.crop / 2
+          }px) translateY(180px)`,
+        }}
       >
         <video
           autoPlay
@@ -72,8 +85,8 @@ const CamDisplay = ({ config }) => {
         <div
           className="is-flex is-flex-centered m-0 p-0"
           style={{
-            width: "10px",
-            height: "10px",
+            width: "20px",
+            height: "20px",
             position: "absolute",
             transform: `translateX(${antennaXY.x}px) translateY(${antennaXY.y}px)`,
             color: "black",
@@ -87,8 +100,8 @@ const CamDisplay = ({ config }) => {
         <div
           className="is-flex is-flex-centered m-0 p-0"
           style={{
-            width: "10px",
-            height: "10px",
+            width: "20px",
+            height: "20px",
             position: "absolute",
             transform: `translateX(${pile0.x}px) translateY(${pile0.y}px)`,
             color: "black",
@@ -101,8 +114,8 @@ const CamDisplay = ({ config }) => {
         <div
           className="is-flex is-flex-centered m-0 p-0"
           style={{
-            width: "10px",
-            height: "10px",
+            width: "20px",
+            height: "20px",
             position: "absolute",
             transform: `translateX(${pile1.x}px) translateY(${pile1.y}px)`,
             color: "black",

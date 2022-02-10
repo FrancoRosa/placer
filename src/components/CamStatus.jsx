@@ -12,8 +12,8 @@ const CamStatus = () => {
   const [antennaX, setAntennaX] = useState(camConfig.antennaX);
   const [antennaY, setAntennaY] = useState(camConfig.antennaY);
   const vidReference = useRef();
-  const videoHigh = 720;
-  const videoWidth = 1280;
+  const videoHigh = 1080;
+  const videoWidth = 1920;
   let kX = crop / camWidth;
   let kY = videoHigh / camLength;
 
@@ -166,7 +166,12 @@ const CamStatus = () => {
               <p className="m-4" style={{ transform: "rotate(-90deg)" }}>
                 {camLength} ft
               </p>
-              <div style={{ width: `${crop}px`, height: `${videoHigh}px` }}>
+              <div
+                style={{
+                  width: `${crop}px`,
+                  height: `${videoHigh}px`,
+                }}
+              >
                 <video
                   autoPlay
                   ref={vidReference}
