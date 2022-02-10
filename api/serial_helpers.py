@@ -7,7 +7,7 @@ import serial
 
 from uart_procesor import get_course, get_latlng
 
-url = 'http://localhost:9999'
+url = 'https://localhost:9999'
 
 laser_connected = False
 laser_port = None
@@ -127,8 +127,7 @@ def connect_gps():
                 while True:
                     response = gps_port.readline()
 
-                    # if test_command in response:
-                    if test_port == '/dev/ttyACM0':
+                    if test_command in response:
                         gps_connected = True
                         print("... gps connected at:", test_port)
                         while gps_connected:
@@ -208,10 +207,10 @@ def gps_frame_processor(line):
 
     if b'$GNGGA' in line:
         location = get_latlng(line)
-        post(url+'/api/location', json=location)
+        post(url+'/api/location', json=location, verify=False)
 
     if compass_connected:
-        post(url+'/api/heading', json={'heading': compass_yaw})
+        post(url+'/api/heading', json={'heading': compass_yaw}, verify=False)
     else:
         if b'$GNVTG' in line:
             heading = get_course(line)
