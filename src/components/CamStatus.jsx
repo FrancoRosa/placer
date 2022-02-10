@@ -12,8 +12,8 @@ const CamStatus = () => {
   const [antennaX, setAntennaX] = useState(camConfig.antennaX);
   const [antennaY, setAntennaY] = useState(camConfig.antennaY);
   const vidReference = useRef();
-  const videoHigh = 400;
-  const videoWidth = 600;
+  const videoHigh = 720;
+  const videoWidth = 1280;
   let kX = crop / camWidth;
   let kY = videoHigh / camLength;
 
