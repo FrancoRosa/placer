@@ -29,9 +29,6 @@ const CamDisplay = ({ config }) => {
         rotatePoint(center.centDist[1], center.heading),
       ];
 
-      console.log("In:", center.centDist[0]);
-      console.log("Ou:", pilePos[0]);
-
       setPile0({
         x: antennaXY.x + pilePos[0].x * config.kX,
         y: antennaXY.y - pilePos[0].y * config.kY,
