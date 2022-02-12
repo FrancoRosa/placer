@@ -194,7 +194,7 @@ def gps_frame_processor(line):
             post(url+'/api/heading',
                  json={'heading': compass_yaw}, verify=False)
 
-    if b'$GNVTG' in line & & not(compass_connected):
+    if b'$GNVTG' in line and not(compass_connected):
         heading = get_course(line)
         print("heading:", heading)
         if heading['heading'] != None:
