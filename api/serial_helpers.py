@@ -189,7 +189,7 @@ def gps_frame_processor(line):
         if b'$GNVTG' in line:
             heading = get_course(line)
             if heading['heading'] != None:
-                post(url+'/api/heading', json=heading)
+                post(url+'/api/heading', json=heading, validate=False)
 
 
 def get_laser():
