@@ -193,12 +193,12 @@ def gps_frame_processor(line):
             sleep(1)
             post(url+'/api/heading',
                  json={'heading': compass_yaw}, verify=False)
-        else:
-            if b'$GNVTG' in line:
-                heading = get_course(line)
-                print("heading:", heading)
-                if heading['heading'] != None:
-                    post(url+'/api/heading', json=heading, validate=False)
+
+    if b'$GNVTG' in line & & not(compass_connected):
+        heading = get_course(line)
+        print("heading:", heading)
+        if heading['heading'] != None:
+            post(url+'/api/heading', json=heading, validate=False)
 
 
 def get_laser():
