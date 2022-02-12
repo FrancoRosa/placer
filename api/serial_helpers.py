@@ -8,6 +8,8 @@ import serial
 from uart_procesor import get_course, get_latlng
 
 url = 'https://localhost:9999'
+gps_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0"
+compass_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0"
 
 laser_connected = False
 laser_port = None
@@ -113,46 +115,30 @@ def connect_laser():
 def connect_gps():
     global gps_connected, gps_port, gps_logs
     sleep(4)
-    test_command = '$GNGGA'.encode()
     while True:
-        ports = available_ports()
-        print(ports)
-        for test_port in ports:
-            try:
-                gps_connected = False
-                timeout = 2
-                gps_port = serial.Serial(
-                    test_port, baudrate=115200, timeout=timeout)
-                start = time()
-                while True:
-                    response = gps_port.readline()
+        try:
+            gps_connected = False
+            gps_port = serial.Serial(gps_path, baudrate=115200, timeout=2)
+            gps_connected = True
 
-                    if test_command in response:
-                        gps_connected = True
-                        print("... gps connected at:", test_port)
-                        while gps_connected:
-                            gps_port.cd  # Force an error if serial disconnected
-                            response = gps_port.readline()
-                            gps_frame_processor(response)
+            while gps_connected:
+                response = gps_port.readline()
+                gps_frame_processor(response)
 
-                            try:
-                                response = response.decode()
-                            except:
-                                response = ''
-                            gps_logs.append([int(time()), response])
-                            if len(gps_logs) > 20:
-                                gps_logs = gps_logs[1:]
+                try:
+                    response = response.decode()
+                except:
+                    response = ''
 
-                    end = time()
-                    elapsed = end - start
-                    if elapsed > timeout:
-                        break
-            except Exception as error:
-                error_string = str(error)
-                print(error_string)
-                print("... gps serial error")
-                pass
-            sleep(1)
+                gps_logs.append([int(time()), response])
+                if len(gps_logs) > 20:
+                    gps_logs = gps_logs[1:]
+
+        except Exception as error:
+            error_string = str(error)
+            print(error_string)
+            print("... gps serial error")
+            pass
         sleep(5)
 
 
