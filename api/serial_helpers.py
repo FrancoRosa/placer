@@ -1,4 +1,3 @@
-from pyrsistent import T
 from serial.tools.list_ports import comports
 from json import dumps
 from time import sleep, time
