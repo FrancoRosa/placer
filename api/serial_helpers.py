@@ -120,7 +120,7 @@ def connect_gps():
             gps_connected = False
             gps_port = serial.Serial(gps_path, baudrate=115200, timeout=2)
             gps_connected = True
-
+            print("... GPS connected")
             while gps_connected:
                 response = gps_port.readline()
                 gps_frame_processor(response)
@@ -149,43 +149,31 @@ def get_degrees(arr):
 
 def connect_compass():
     global compass_connected, compass_port, compass_yaw
-    sleep(6)
-    test_command = b'\x55\x61'
-    while True:
-        ports = available_ports()
-        print(ports)
-        for test_port in ports:
-            try:
-                compass_connected = False
-                timeout = 1
-                compass_port = serial.Serial(
-                    test_port, baudrate=115200, timeout=timeout)
-                while True:
-                    response = gps_port.readline(20)
+    try:
+        compass_connected = False
+        compass_port = serial.Serial(compass_path, baudrate=115200, timeout=1)
+        while True:
+            response = compass_port.readline(20)
 
-                    if test_command in response:
-                        compass_connected = True
-                        print("... compass connected at:", test_port)
-                        buffer = b'\x00'*22
-                        while compass_connected:
-                            x = compass_port.readline(1)
-                            buffer = buffer[1:] + x
-                            if buffer[-2:] == buffer[:2] == b'\x55\x61':
-                                compass_yaw = get_degrees(
-                                    [buffer[18], buffer[19]]
-                                )
-                            try:
-                                response = response.decode()
-                            except:
-                                response = ''
+            compass_connected = True
+            print("... compass connected")
+            buffer = b'\x00'*22
+            while compass_connected:
+                x = compass_port.readline(1)
+                buffer = buffer[1:] + x
+                if buffer[-2:] == buffer[:2] == b'\x55\x61':
+                    compass_yaw = get_degrees([buffer[18], buffer[19]])
+                try:
+                    response = response.decode()
+                except:
+                    response = ''
 
-            except Exception as error:
-                error_string = str(error)
-                print(error_string)
-                print("... compass serial error")
-                pass
-            sleep(1)
-        sleep(5)
+    except Exception as error:
+        error_string = str(error)
+        print(error_string)
+        print("... compass serial error")
+        pass
+    sleep(5)
 
 
 def gps_frame_processor(line):
