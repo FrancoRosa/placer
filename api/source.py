@@ -12,6 +12,8 @@ from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_con
 import json
 import logging
 
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if system() == 'Linux':
     from os import uname
