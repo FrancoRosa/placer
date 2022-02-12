@@ -143,7 +143,6 @@ def set_laser_blink():
 def set_location():
     global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file
     location = request.get_json()
-    print("LCATION:", location)
     if not(processing_file):
         truck = polygon(location, heading, config)
         if len(waypoint) > 0:

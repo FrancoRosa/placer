@@ -182,13 +182,16 @@ def gps_frame_processor(line):
 
     if b'$GNGGA' in line:
         location = get_latlng(line)
+        print("location:", location)
         post(url+'/api/location', json=location, verify=False)
 
     if compass_connected:
+        print("compass:", compass_yaw)
         post(url+'/api/heading', json={'heading': compass_yaw}, verify=False)
     else:
         if b'$GNVTG' in line:
             heading = get_course(line)
+            print("heading:", heading)
             if heading['heading'] != None:
                 post(url+'/api/heading', json=heading, validate=False)
 
