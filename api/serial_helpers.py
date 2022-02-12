@@ -144,7 +144,8 @@ def connect_gps():
 
 def get_degrees(arr):
     angle = ((arr[1] << 8) | arr[0])/32768*180
-    return angle if angle > 0 else 360-angle
+    angle = angle if angle > 0 else 360-angle
+    return round(angle, 1)
 
 
 def connect_compass():
