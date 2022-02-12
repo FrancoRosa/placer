@@ -1,3 +1,4 @@
+from pyrsistent import T
 from serial.tools.list_ports import comports
 from json import dumps
 from time import sleep, time
@@ -135,6 +136,7 @@ def connect_gps():
                     gps_logs = gps_logs[1:]
 
         except Exception as error:
+            gps_connected = False
             error_string = str(error)
             print(error_string)
             print("... gps serial error")
@@ -150,36 +152,38 @@ def get_degrees(arr):
 
 def connect_compass():
     global compass_connected, compass_port, compass_yaw
-    try:
-        compass_connected = False
-        compass_port = serial.Serial(compass_path, baudrate=115200, timeout=1)
-        while True:
-            response = compass_port.readline(20)
-
+    while True:
+        try:
+            compass_connected = False
+            compass_port = serial.Serial(
+                compass_path, baudrate=115200, timeout=1)
             compass_connected = True
-            print("... compass connected")
-            buffer = b'\x00'*22
             while compass_connected:
-                x = compass_port.readline(1)
-                buffer = buffer[1:] + x
-                if buffer[-2:] == buffer[:2] == b'\x55\x61':
-                    compass_yaw = get_degrees([buffer[18], buffer[19]])
-                try:
-                    response = response.decode()
-                except:
-                    response = ''
+                response = compass_port.readline(20)
 
-    except Exception as error:
-        error_string = str(error)
-        print(error_string)
-        print("... compass serial error")
-        pass
-    sleep(5)
+                compass_connected = True
+                print("... compass connected")
+                buffer = b'\x00'*22
+                while compass_connected:
+                    x = compass_port.readline(1)
+                    buffer = buffer[1:] + x
+                    if buffer[-2:] == buffer[:2] == b'\x55\x61':
+                        compass_yaw = get_degrees([buffer[18], buffer[19]])
+                    try:
+                        response = response.decode()
+                    except:
+                        response = ''
+
+        except Exception as error:
+            compass_connected = False
+            error_string = str(error)
+            print(error_string)
+            print("... compass serial error")
+            pass
+        sleep(5)
 
 
 def gps_frame_processor(line):
-    global compass_connected, compass_yaw
-
     if b'$GNGGA' in line:
         location = get_latlng(line)
         print("location:", location)
