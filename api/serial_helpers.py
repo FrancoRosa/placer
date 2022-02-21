@@ -21,6 +21,9 @@ gps_logs = []
 compass_connected = False
 compass_port = None
 compass_yaw = 0
+accuracy = 0
+rel_heading = 0
+rel_distance = 0
 
 
 def format_val(txt, to_ft=True):
@@ -182,23 +185,58 @@ def connect_compass():
         sleep(5)
 
 
+relative_header = b'\xb5\x62\x01\x3c\x40\x00'
+position_header = b'\xb5\x62\x01\x07\x5c\x00'
+
+
+def get_frame(data, preamble):
+    if preamble in data:
+        index = data.index(preamble)
+        frame_len = preamble[4]
+        preamble_len = len(preamble)
+        portion = data[index+preamble_len:index+preamble_len+frame_len]
+        return portion
+    return None
+
+
 def gps_frame_processor(line):
+    global accuracy, rel_distance, rel_heading
     if b'$GNGGA' in line:
         location = get_latlng(line)
         print("location:", location)
         post(url+'/api/location', json=location, verify=False)
 
-        if compass_connected:
-            print("compass:", compass_yaw)
-            sleep(1)
-            post(url+'/api/heading',
-                 json={'heading': compass_yaw}, verify=False)
+    position_frame = get_frame(line, position_header)
+    if position_frame:
+        accuracy = int.from_bytes(
+            position_frame[40:44], "little", signed=False)
 
-    if b'$GNVTG' in line and not(compass_connected):
-        heading = get_course(line)
-        print("heading:", heading)
-        if heading['heading'] != None:
-            post(url+'/api/heading', json=heading, validate=False)
+    relative_frame = get_frame(line, relative_header)
+    if relative_frame:
+        rel_distance = int.from_bytes(
+            relative_frame[20:24], "little", signed=True)
+        rel_heading = int.from_bytes(
+            relative_frame[24:28], "little", signed=True)
+    #     if compass_connected:
+    #         print("compass:", compass_yaw)
+    #         sleep(1)
+    #         post(url+'/api/heading',
+    #              json={'heading': compass_yaw}, verify=False)
+
+    # if b'$GNVTG' in line and not(compass_connected):
+    #     heading = get_course(line)
+    #     print("heading:", heading)
+    #     if heading['heading'] != None:
+    #         post(url+'/api/heading', json=heading, validate=False)
+
+
+def get_ublox_data():
+    global accuracy, rel_distance, rel_heading
+    return {
+        "accuracy": accuracy,
+        "rel_distance": rel_distance,
+        "rel_heading": rel_heading,
+    }
 
 
 def get_laser():
@@ -250,5 +288,5 @@ def draw_square(XYdistances, Zdistance, scale=1):
 
 
 # Thread(target=connect_laser).start()
-Thread(target=connect_compass).start()
+# Thread(target=connect_compass).start()
 Thread(target=connect_gps).start()

@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from helpers import get_guides, polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
-from serial_helpers import get_laser, get_gps
+from serial_helpers import get_laser, get_gps, get_ublox_data
 from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
@@ -143,6 +143,11 @@ def set_laser_blink():
 def set_location():
     global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file
     location = request.get_json()
+    ublox = get_ublox_data()
+    if ublox["accuracy"] != ublox["rel_heading"]:
+        heading = {"heading": ublox["rel_heading"]}
+        print("UBLOX:", ublox)
+
     if not(processing_file):
         truck = polygon(location, heading, config)
         if len(waypoint) > 0:
@@ -188,7 +193,7 @@ def set_location():
                     float(config["laserZ"]),
                     float(config["laserScale"]))
 
-        broadcast({**heading, **location, **truck, **bay_to_waypoint})
+        broadcast({**heading, **location, **truck, **bay_to_waypoint, **ublox})
 
     return send_response({"message": True})
 
