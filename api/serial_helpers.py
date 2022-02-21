@@ -3,12 +3,22 @@ from json import dumps
 from time import sleep, time
 from threading import Thread
 from requests import post
+from platform import system
+
 import serial
 
 from uart_procesor import get_course, get_latlng
 
+
+def is_rpi():
+    if system() == 'Linux':
+        from os import uname
+        return uname()[4] != 'x86_64'
+    return False
+
+
 url = 'https://localhost:9999'
-gps_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0"
+gps_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0" if is_rpi() else "/dev/ttyUSB0"
 compass_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0"
 
 laser_connected = False
@@ -21,9 +31,9 @@ gps_logs = []
 compass_connected = False
 compass_port = None
 compass_yaw = 0
-accuracy = 0
-rel_heading = 0
-rel_distance = 0
+accuracy = 2.0
+rel_heading = 30.0
+rel_distance = 5.0
 
 
 def format_val(txt, to_ft=True):
@@ -203,7 +213,6 @@ def gps_frame_processor(line):
     global accuracy, rel_distance, rel_heading
     if b'$GNGGA' in line:
         location = get_latlng(line)
-        print("location:", location)
         post(url+'/api/location', json=location, verify=False)
 
     position_frame = get_frame(line, position_header)

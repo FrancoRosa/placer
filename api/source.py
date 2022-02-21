@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from helpers import get_guides, polygon, cvs_to_rows, rows_to_json, coordinate_distance
 from helpers import xlsx_to_rows, is_csv, create_projs, moveLasers
-from serial_helpers import get_laser, get_gps, get_ublox_data
+from serial_helpers import get_laser, get_gps, get_ublox_data, is_rpi
 from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
@@ -15,11 +15,7 @@ import logging
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-if system() == 'Linux':
-    from os import uname
-    rpi = uname()[4] != 'x86_64'
-else:
-    rpi = False
+rpi = is_rpi()
 
 UPLOAD_FOLDER = 'cvs_files'
 if rpi:
@@ -146,7 +142,6 @@ def set_location():
     ublox = get_ublox_data()
     if ublox["accuracy"] != ublox["rel_heading"]:
         heading = {"heading": ublox["rel_heading"]}
-        print("UBLOX:", ublox)
 
     if not(processing_file):
         truck = polygon(location, heading, config)
