@@ -60,6 +60,9 @@ export default {
     distY: [0, 0],
     distX: [0, 0],
     centDist: [{}, {}],
+    accuracy: 2,
+    rel_distance: 5,
+    rel_heading: 30,
   },
   setCenter: action((state, center) => {
     state.center = center;
