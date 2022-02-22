@@ -137,7 +137,7 @@ def set_laser_blink():
 
 @app.route('/api/location', methods=['post'])
 def set_location():
-    global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file
+    global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file, heading
     location = request.get_json()
     ublox = get_ublox_data()
     if ublox["accuracy"] != ublox["rel_heading"]:
