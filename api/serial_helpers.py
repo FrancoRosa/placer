@@ -241,10 +241,13 @@ def gps_frame_processor(line):
 
 def get_ublox_data():
     global accuracy, rel_distance, rel_heading
+    angle = rel_heading*1e-5 + 90
+    if angle >= 360:
+        angle = angle - 360
     return {
-        "accuracy": accuracy,
-        "rel_distance": rel_distance,
-        "rel_heading": rel_heading,
+        "accuracy": accuracy*1e-3,
+        "rel_distance": rel_distance*1e-3,
+        "rel_heading": angle,
     }
 
 
