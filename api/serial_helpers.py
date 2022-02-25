@@ -17,7 +17,7 @@ def is_rpi():
     return False
 
 
-url = 'https://localhost:9999'
+url = 'http://localhost:9999'
 gps_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0" if is_rpi() else "/dev/ttyUSB0"
 compass_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0"
 

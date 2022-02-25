@@ -2,7 +2,7 @@ import axios from "axios";
 import io from "socket.io-client";
 
 // const host = "raspberrypi.local:9999";
-const host = `https://${window.location.hostname}:9999`;
+const host = `http://${window.location.hostname}:9999`;
 
 export const socket = io.connect(`${host}`);
 
