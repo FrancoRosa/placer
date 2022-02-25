@@ -205,5 +205,5 @@ input[type="range"]::-webkit-slider-thumb {
   top: 0;
   right: 0;
   color: red;
-  font-size: 2em;
+  font-size: 1em;
 }

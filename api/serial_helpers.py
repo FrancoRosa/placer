@@ -229,7 +229,7 @@ def gps_frame_processor(line):
             relative_frame[24:28], "little", signed=True)
         week_timestamp = int.from_bytes(
             relative_frame[4:8], "little", signed=False)
-        print("timestap:", week_timestamp)
+        print("timestap:", week_timestamp/1000)
     #     if compass_connected:
     #         print("compass:", compass_yaw)
     #         sleep(1)

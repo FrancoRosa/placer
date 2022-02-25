@@ -443,7 +443,7 @@ const UserMap = () => {
           </button>
         </div>
       </div>
-      <p className="timestamp">{center.week_timestamp}</p>
+      <p className="timestamp">{center.week_timestamp / 1000}</p>
     </>
   );
 };
