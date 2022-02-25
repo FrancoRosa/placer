@@ -34,6 +34,7 @@ compass_yaw = 0
 accuracy = 2.0
 rel_heading = 30.0
 rel_distance = 5.0
+week_timestamp = 0
 
 
 def format_val(txt, to_ft=True):
@@ -210,7 +211,7 @@ def get_frame(data, preamble):
 
 
 def gps_frame_processor(line):
-    global accuracy, rel_distance, rel_heading
+    global accuracy, rel_distance, rel_heading, week_timestamp
     if b'$GNGGA' in line:
         location = get_latlng(line)
         post(url+'/api/location', json=location, verify=False)
@@ -226,6 +227,9 @@ def gps_frame_processor(line):
             relative_frame[20:24], "little", signed=True)
         rel_heading = int.from_bytes(
             relative_frame[24:28], "little", signed=True)
+        week_timestamp = int.from_bytes(
+            relative_frame[4:8], "little", signed=False)
+        print("timestap:", week_timestamp)
     #     if compass_connected:
     #         print("compass:", compass_yaw)
     #         sleep(1)
@@ -248,6 +252,7 @@ def get_ublox_data():
         "accuracy": accuracy*1e-3,
         "rel_distance": rel_distance*1e-3,
         "rel_heading": angle,
+        "week_timestamp": week_timestamp
     }
 
 

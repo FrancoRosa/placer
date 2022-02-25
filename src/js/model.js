@@ -63,6 +63,7 @@ export default {
     accuracy: 2,
     rel_distance: 5,
     rel_heading: 30,
+    week_timestamp: 0,
   },
   setCenter: action((state, center) => {
     state.center = center;
