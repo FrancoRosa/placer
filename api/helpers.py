@@ -178,6 +178,20 @@ def rows_to_json(rows, epsg_code):
                 "y": y,
                 "placed": False
             })
+    if 'Pile ID,Pile Color,Y,X' in headers:
+        for value in values:
+            value = value.split(',')
+            x, y = float(value[3]), float(value[2])
+            latlng = proj_to_wgs84.transform(x, y)
+            result.append({
+                "pile_id": value[0],
+                "lat": latlng[0],
+                "lng": latlng[1],
+                "color": color_convert(value[1]),
+                "x": x,
+                "y": y,
+                "placed": False
+            })
 
     return result
 

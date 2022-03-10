@@ -7,8 +7,15 @@
   - [Requirements](#requirements)
     - [File formats supported](#file-formats-supported)
     - [Colors](#colors)
-    - [Todo](#todo)
   - [Installation instructions](#installation-instructions)
+    - [Requirements:](#requirements-1)
+    - [Node dependencies:](#node-dependencies)
+    - [Python dependencies:](#python-dependencies)
+    - [Software donwload:](#software-donwload)
+  - [Start Software](#start-software)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+  - [How to use it.](#how-to-use-it)
 
 ## Project description
 
@@ -31,6 +38,9 @@ In order to improve the accuracy of this tool it is required to know the followi
 ### File formats supported
 
 This tool supports *.xlsx and *.cvs files but in order to recognize the values provided they should be formated as shown on the examples bellow
+
+Pile ID|Pile Color|Y|X|...
+-------|----------|-|-|---
 
 PILE ID|Pile Color|X|Y|Z
 -------|----------|-|-|-
