@@ -17,7 +17,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 rpi = is_rpi()
 
-UPLOAD_FOLDER = 'cvs_files'
+UPLOAD_FOLDER = '/home/abhishek/placer/api/cvs_files'
 if rpi:
     UPLOAD_FOLDER = '/home/pi/placer/api/cvs_files'
 
