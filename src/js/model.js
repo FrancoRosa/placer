@@ -1,5 +1,17 @@
 import { action } from "easy-peasy";
 
+const initial = {
+  waypoints: [],
+};
+
+const getStorage = (key) => {
+  return JSON.parse(window.localStorage.getItem(key)) || initial[key];
+};
+
+const setStorage = (key, obj) => {
+  window.localStorage.setItem(key, JSON.stringify(obj));
+};
+
 export default {
   nextPiles: [
     { distance: null, pile_id: null },
@@ -15,19 +27,27 @@ export default {
     state.nextPiles = tempPiles;
   }),
 
-  waypoints: [],
+  waypoints: getStorage("waypoints"),
+
   setWaypoints: action((state, waypoints) => {
+    setStorage("waypoints", waypoints);
     state.waypoints = [...waypoints];
   }),
+
   placeWaypoint: action((state, id) => {
-    state.waypoints = state.waypoints.map((waypoint) => {
+    let newWaypoints = state.waypoints.map((waypoint) => {
       return waypoint.pile_id == id ? { ...waypoint, placed: true } : waypoint;
     });
+    setStorage("waypoints", newWaypoints);
+    state.waypoints = newWaypoints;
   }),
+
   unplaceWaypoint: action((state, id) => {
-    state.waypoints = state.waypoints.map((waypoint) => {
+    let newWaypoints = state.waypoints.map((waypoint) => {
       return waypoint.pile_id == id ? { ...waypoint, placed: false } : waypoint;
     });
+    setStorage("waypoints", newWaypoints);
+    state.waypoints = newWaypoints;
   }),
 
   selectedColor: "",

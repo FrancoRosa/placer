@@ -15,6 +15,8 @@ import { playColor, playOther } from "../js/audio";
 import mapboxgl from "mapbox-gl";
 import marooka from "../assets/marooka-top.bmp";
 import CamDisplay from "./CamDisplay";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobeAmericas } from "@fortawesome/free-solid-svg-icons";
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass =
@@ -45,6 +47,7 @@ const UserMap = () => {
   const [autoCenter, setAutoCenter] = useState(true);
   const [cam, setCam] = useState(false);
   const [guides, setGuides] = useState();
+  const [terrain, setTerrain] = useState(null);
 
   const [truck, setTruck] = useState([
     { lat: 0, lng: 0 },
@@ -262,7 +265,14 @@ const UserMap = () => {
               }`
             }
           >
-            <StaticMap mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+            <StaticMap
+              mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+              mapStyle={
+                terrain
+                  ? "mapbox://styles/km115franco/cl0ek8k82000d15mj12mm3mda"
+                  : undefined // : "mapbox://styles/km115franco/cl0ekrsl8001o14p8o3jik4h1"
+              }
+            />
             <MapView
               x={"80%"}
               y={"80%"}
@@ -440,6 +450,14 @@ const UserMap = () => {
             onClick={() => setCam(!cam)}
           >
             Cam
+          </button>
+          <button
+            className={`ml-2 button is-outlined ${
+              terrain ? "is-success" : "is-danger"
+            }`}
+            onClick={() => setTerrain(!terrain)}
+          >
+            <FontAwesomeIcon icon={faGlobeAmericas} />
           </button>
         </div>
       </div>
