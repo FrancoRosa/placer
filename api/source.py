@@ -11,13 +11,19 @@ from serial_helpers import get_laser, get_gps, get_ublox_data, is_rpi
 from serial_helpers import available_ports, draw_square, rgb_matrix, set_lsr_config, set_lsr_on, set_lsr_blink
 import json
 import logging
+from getpass import getuser
+
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 rpi = is_rpi()
 
-UPLOAD_FOLDER = '/home/abhishek/placer/api/cvs_files'
+if getuser() == 'abhishek':
+    UPLOAD_FOLDER = '/home/abhishek/placer/api/cvs_files'
+else:
+    UPLOAD_FOLDER = '/home/fx/Upwork/placer/api/cvs_files'
+
 if rpi:
     UPLOAD_FOLDER = '/home/pi/placer/api/cvs_files'
 
@@ -140,7 +146,7 @@ def set_location():
     global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file, heading
     location = request.get_json()
     ublox = get_ublox_data()
-    if ublox["accuracy"] != ublox["rel_heading"]:
+    if ublox["accuracy"] > 0:
         heading = {"heading": ublox["rel_heading"]}
 
     if not(processing_file):

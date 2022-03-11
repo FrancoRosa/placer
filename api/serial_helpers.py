@@ -31,9 +31,9 @@ gps_logs = []
 compass_connected = False
 compass_port = None
 compass_yaw = 0
-accuracy = 2.0
-rel_heading = 30.0
-rel_distance = 5.0
+accuracy = 0.0
+rel_heading = 0.0
+rel_distance = 0.0
 week_timestamp = 0
 
 

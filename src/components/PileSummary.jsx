@@ -79,7 +79,7 @@ const PileSummary = () => {
             transform={{ rotate: center.heading - 45 }}
             className="has-text-white is-size-1"
           />
-          <p className="is-size-4">{center.heading.toFixed(1)}॰</p>
+          <p className="is-size-4">{parseFloat(center.heading).toFixed(1)}॰</p>
           <p className="is-link help">
             {(center.accuracy * 3.28084).toFixed(1)}ft
           </p>
