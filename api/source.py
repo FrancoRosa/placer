@@ -145,6 +145,7 @@ def set_laser_blink():
 def set_location():
     global location, truck, bay_to_waypoint, waypoint, ref_bay, processing_file, heading
     location = request.get_json()
+    print(location)
     ublox = get_ublox_data()
     if ublox["accuracy"] > 0:
         heading = {"heading": ublox["rel_heading"]}
