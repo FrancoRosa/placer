@@ -14,6 +14,7 @@ import { useLocalStorage, colors, colorsFill, getGuides } from "../js/helpers";
 import { playColor, playOther } from "../js/audio";
 import mapboxgl from "mapbox-gl";
 import marooka from "../assets/marooka-top.bmp";
+import skid from "../assets/top-skid.bmp";
 import CamDisplay from "./CamDisplay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobeAmericas } from "@fortawesome/free-solid-svg-icons";
@@ -72,6 +73,7 @@ const UserMap = () => {
     lng: 0,
   });
   const selectedColor = useStoreState((state) => state.selectedColor);
+  const [skidster, setSkidster] = useLocalStorage("skid", false);
 
   const socketListener = () => {
     socket.on("message", (msg) => {
@@ -302,7 +304,7 @@ const UserMap = () => {
                 [truck[1].lng, truck[1].lat, 0],
                 [truck[2].lng, truck[2].lat, 0],
               ]}
-              image={marooka}
+              image={skidster ? skid : marooka}
             />
 
             <ScatterplotLayer
