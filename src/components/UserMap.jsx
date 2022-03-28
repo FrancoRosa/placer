@@ -46,7 +46,8 @@ const UserMap = () => {
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
   const [autoCenter, setAutoCenter] = useState(true);
   const [cam, setCam] = useState(false);
-  const [guides, setGuides] = useState();
+  const [ewLines, setEwLines] = useState(false);
+  const [guides, setGuides] = useState([[], []]);
   const [terrain, setTerrain] = useState(null);
 
   const [truck, setTruck] = useState([
@@ -380,14 +381,25 @@ const UserMap = () => {
               getTargetPosition={(d) => d.to}
               getColor={[20, 140, 0]}
             />
-            <LineLayer
-              data={guides}
-              widthUnits="meters"
-              getWidth={0.1}
-              getSourcePosition={(d) => d.from}
-              getTargetPosition={(d) => d.to}
-              getColor={[20, 140, 0, 100]}
-            />
+            {ewLines ? (
+              <LineLayer
+                data={guides[1]}
+                widthUnits="meters"
+                getWidth={0.2}
+                getSourcePosition={(d) => d.from}
+                getTargetPosition={(d) => d.to}
+                getColor={[20, 140, 0, 100]}
+              />
+            ) : (
+              <LineLayer
+                data={guides[0]}
+                widthUnits="meters"
+                getWidth={0.2}
+                getSourcePosition={(d) => d.from}
+                getTargetPosition={(d) => d.to}
+                getColor={[20, 140, 0, 100]}
+              />
+            )}
             <LineLayer
               data={getPointers(bays, nextPiles)}
               widthUnits="meters"
@@ -447,6 +459,14 @@ const UserMap = () => {
             onClick={() => setCam(!cam)}
           >
             Cam
+          </button>
+          <button
+            className={`ml-2 button is-outlined ${
+              ewLines ? "is-info" : "is-primary"
+            }`}
+            onClick={() => setEwLines(!ewLines)}
+          >
+            {ewLines ? "E-W" : "N-S"}
           </button>
           <button
             className={`ml-2 button is-outlined ${

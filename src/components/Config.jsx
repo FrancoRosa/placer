@@ -8,9 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileAlt, faSearch } from "@fortawesome/free-solid-svg-icons";
 import marooka from "../assets/marooka-size.png";
 import marookaSide from "../assets/marooka-side.png";
+import skid from "../assets/skidster.png";
+import skidSide from "../assets/skidsterWidth.png";
+import { useEffect } from "react";
 
 const Config = () => {
   const [localconfig, setLocalConfig] = useLocalStorage("config", {});
+  const [skidster, setSkidster] = useLocalStorage("skid", false);
   const [truckLen, setTruckLen] = useState(localconfig.truckLen);
   const [truckWid, setTruckWid] = useState(localconfig.truckWid);
   const [truckHei, setTruckHei] = useState(localconfig.truckHei);
@@ -49,6 +53,11 @@ const Config = () => {
       .then(() => setFeedback("Success"))
       .catch(() => setFeedback("Fail"));
   };
+
+  useEffect(() => {
+    if (skidster) setFromCenter(0.1);
+    else setFromCenter(localconfig.fromCenter);
+  }, [skidster]);
 
   return (
     <div className="container">
@@ -95,18 +104,22 @@ const Config = () => {
               placeholder="E.g: 5"
               changeHandler={setBay1}
             />
-            <NumberInput
-              label="Bay 2 from truck head"
-              value={bay2}
-              placeholder="E.g: 5"
-              changeHandler={setBay2}
-            />
-            <NumberInput
-              label="Distance from center"
-              value={fromCenter}
-              placeholder="E.g: 5"
-              changeHandler={setFromCenter}
-            />
+            {!skidster && (
+              <>
+                <NumberInput
+                  label="Bay 2 from truck head"
+                  value={bay2}
+                  placeholder="E.g: 5"
+                  changeHandler={setBay2}
+                />
+                <NumberInput
+                  label="Distance from center"
+                  value={fromCenter}
+                  placeholder="E.g: 5"
+                  changeHandler={setFromCenter}
+                />
+              </>
+            )}
           </div>
           <hr style={{ margin: ".25em" }} />
           <div className="">
@@ -194,8 +207,30 @@ const Config = () => {
         </div>
 
         <div className="column is-centered has-text-centered">
-          <img src={marooka} />
-          <img src={marookaSide} />
+          <div>
+            <button
+              className="button m-4"
+              onClick={() => {
+                setSkidster(false);
+              }}
+            >
+              Marooka
+            </button>
+            <button
+              className="button m-4"
+              onClick={() => {
+                setSkidster(true);
+              }}
+            >
+              Skidster
+            </button>
+          </div>
+
+          <img src={skidster ? skid : marooka} alt="marooka front top view" />
+          <img
+            src={skidster ? skidSide : marookaSide}
+            alt="marooka-side view"
+          />
         </div>
       </div>
     </div>
