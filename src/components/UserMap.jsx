@@ -49,6 +49,7 @@ const UserMap = () => {
   const [cam, setCam] = useState(false);
   const [ewLines, setEwLines] = useState(false);
   const [guides, setGuides] = useState([[], []]);
+  const [targetGuides, setTargetGuides] = useState([]);
   const [terrain, setTerrain] = useState(null);
 
   const [truck, setTruck] = useState([
@@ -111,6 +112,7 @@ const UserMap = () => {
   useEffect(() => {
     getWaypoints().then((res) => {
       setGuides(res.guides);
+      setTargetGuides(res.guides[0]);
       if (res.waypoints.length > 0) {
         setCenter({ ...center, ...res.waypoints[0] });
         setViewState({
@@ -127,6 +129,10 @@ const UserMap = () => {
       socket.off("message");
     };
   }, []);
+
+  useEffect(() => {
+    setTargetGuides(guides[ewLines ? 1 : 0]);
+  }, [ewLines]);
 
   const getNearestPiles = (waypoints, bays) => {
     let distanceBay1;
@@ -383,25 +389,15 @@ const UserMap = () => {
               getTargetPosition={(d) => d.to}
               getColor={[20, 140, 0]}
             />
-            {ewLines ? (
-              <LineLayer
-                data={guides[1]}
-                widthUnits="meters"
-                getWidth={0.2}
-                getSourcePosition={(d) => d.from}
-                getTargetPosition={(d) => d.to}
-                getColor={[20, 140, 0, 100]}
-              />
-            ) : (
-              <LineLayer
-                data={guides[0]}
-                widthUnits="meters"
-                getWidth={0.2}
-                getSourcePosition={(d) => d.from}
-                getTargetPosition={(d) => d.to}
-                getColor={[20, 140, 0, 100]}
-              />
-            )}
+
+            <LineLayer
+              data={targetGuides}
+              widthUnits="meters"
+              getWidth={0.2}
+              getSourcePosition={(d) => d.from}
+              getTargetPosition={(d) => d.to}
+              getColor={[20, 140, 0, 100]}
+            />
             <LineLayer
               data={getPointers(bays, nextPiles)}
               widthUnits="meters"
