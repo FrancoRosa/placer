@@ -193,6 +193,21 @@ def rows_to_json(rows, epsg_code):
                 "placed": False
             })
 
+    if 'id,northing,easting,z,color' in headers:
+        for value in values:
+            value = value.split(',')
+            x, y = float(value[2]), float(value[1])
+            latlng = proj_to_wgs84.transform(x, y)
+            result.append({
+                "pile_id": value[0],
+                "lat": latlng[0],
+                "lng": latlng[1],
+                "color": color_convert(value[4]),
+                "x": x,
+                "y": y,
+                "placed": False
+            })
+
     return result
 
 
