@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.135edd26.chunk.css",
-    "main.js": "/static/js/main.f9726c01.chunk.js",
-    "main.js.map": "/static/js/main.f9726c01.chunk.js.map",
+    "main.js": "/static/js/main.f6fdbc18.chunk.js",
+    "main.js.map": "/static/js/main.f6fdbc18.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.188e91c5.js",
     "runtime-main.js.map": "/static/js/runtime-main.188e91c5.js.map",
     "static/js/2.fcef42ce.chunk.js": "/static/js/2.fcef42ce.chunk.js",
@@ -48,6 +48,9 @@
     "static/media/purplewhite.08127fb1.mp3": "/static/media/purplewhite.08127fb1.mp3",
     "static/media/red.d598f0dc.mp3": "/static/media/red.d598f0dc.mp3",
     "static/media/right_bay.0fce9298.mp3": "/static/media/right_bay.0fce9298.mp3",
+    "static/media/skidster.c78b7685.png": "/static/media/skidster.c78b7685.png",
+    "static/media/skidsterWidth.ba08f578.png": "/static/media/skidsterWidth.ba08f578.png",
+    "static/media/top-skid.26f06d5a.bmp": "/static/media/top-skid.26f06d5a.bmp",
     "static/media/white.a09c2726.mp3": "/static/media/white.a09c2726.mp3",
     "static/media/yellow.1d5be675.mp3": "/static/media/yellow.1d5be675.mp3"
   },
@@ -55,6 +58,6 @@
     "static/js/runtime-main.188e91c5.js",
     "static/js/2.fcef42ce.chunk.js",
     "static/css/main.135edd26.chunk.css",
-    "static/js/main.f9726c01.chunk.js"
+    "static/js/main.f6fdbc18.chunk.js"
   ]
 }
