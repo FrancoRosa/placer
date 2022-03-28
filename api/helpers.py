@@ -360,21 +360,54 @@ def group_by_neighbor(arr, th):
 
 
 def get_guides(points):
+    # N-S
+    # xs = list(map(lambda x: x["x"], points))
+    # xs = group_by_neighbor(xs, 1)
+    # middles = get_middles(xs)
+    # ys = list(map(lambda x: x["y"], points))
+    # min_y = min(ys) - 100
+    # max_y = max(ys) + 100
+    # lines = []
+    # for i in middles:
+    #     start = proj_to_wgs84.transform(i, min_y)
+    #     end = proj_to_wgs84.transform(i, max_y)
+    #     lines.append({
+    #         "from": [start[1], start[0]],
+    #         "to": [end[1], end[0]]
+    #     })
+
+ # E-W
     xs = list(map(lambda x: x["x"], points))
-    xs = group_by_neighbor(xs, 1)
-    middles = get_middles(xs)
+    min_x = min(xs) - 100
+    max_x = max(xs) + 100
     ys = list(map(lambda x: x["y"], points))
     min_y = min(ys) - 100
     max_y = max(ys) + 100
-    lines = []
-    for i in middles:
-        start = proj_to_wgs84.transform(i, min_y)
-        end = proj_to_wgs84.transform(i, max_y)
-        lines.append({
+
+    ys = group_by_neighbor(ys, 1)
+    xs = group_by_neighbor(xs, 1)
+    y_middles = get_middles(ys)
+    x_middles = get_middles(xs)
+
+    ew_lines = []
+    for i in y_middles:
+        start = proj_to_wgs84.transform(min_x, i)
+        end = proj_to_wgs84.transform(max_x, i)
+        ew_lines.append({
             "from": [start[1], start[0]],
             "to": [end[1], end[0]]
         })
-    return lines
+
+    ns_lines = []
+    for i in x_middles:
+        start = proj_to_wgs84.transform(i, min_y)
+        end = proj_to_wgs84.transform(i, max_y)
+        ns_lines.append({
+            "from": [start[1], start[0]],
+            "to": [end[1], end[0]]
+        })
+
+    return [ns_lines, ew_lines]
 
 
 create_projs('2229')
