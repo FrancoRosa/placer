@@ -414,8 +414,8 @@ def get_guides(points):
     min_y = min(ys) - 100
     max_y = max(ys) + 100
 
-    ys = group_by_neighbor(ys, 1)
-    xs = group_by_neighbor(xs, 1)
+    ys = group_by_neighbor(ys, 10)
+    xs = group_by_neighbor(xs, 10)
     y_middles = get_middles(ys)
     x_middles = get_middles(xs)
 
