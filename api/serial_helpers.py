@@ -222,14 +222,18 @@ def gps_frame_processor(line):
             position_frame[40:44], "little", signed=False)
 
     relative_frame = get_frame(line, relative_header)
-    if relative_frame:
-        rel_distance = int.from_bytes(
-            relative_frame[20:24], "little", signed=True)
-        rel_heading = int.from_bytes(
+    if relative_frame and accuracy > 0:
+        pre_heading = int.from_bytes(
             relative_frame[24:28], "little", signed=True)
-        week_timestamp = int.from_bytes(
-            relative_frame[4:8], "little", signed=False)
-        print("timestap:", week_timestamp/1000)
+        if pre_heading > 100:        
+            rel_distance = int.from_bytes(
+                relative_frame[20:24], "little", signed=True)
+            rel_heading = int.from_bytes(
+                relative_frame[24:28], "little", signed=True)
+            week_timestamp = int.from_bytes(
+                relative_frame[4:8], "little", signed=False)
+        print("rel_heading", rel_heading)
+        
     #     if compass_connected:
     #         print("compass:", compass_yaw)
     #         sleep(1)
@@ -304,6 +308,6 @@ def draw_square(XYdistances, Zdistance, scale=1):
     send_to_laser('{flash(1)}' if XYdistances['y'] < 5 else '{flash(0)}')
 
 
-# Thread(target=connect_laser).start()
+Thread(target=connect_laser).start()
 # Thread(target=connect_compass).start()
 Thread(target=connect_gps).start()
