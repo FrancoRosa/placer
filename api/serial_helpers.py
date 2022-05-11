@@ -1,13 +1,13 @@
+from uart_procesor import get_course, get_latlng
+import serial
 from serial.tools.list_ports import comports
 from json import dumps
 from time import sleep, time
 from threading import Thread
 from requests import post
 from platform import system
-
-import serial
-
-from uart_procesor import get_course, get_latlng
+from tcpcom import TCPServer
+port = 5000
 
 
 def is_rpi():
@@ -45,7 +45,7 @@ def format_val(txt, to_ft=True):
 
 
 def rgb_matrix(waypoint, bay_to_waypoint):
-    rgb_port = serial.Serial('/dev/ttyS0')
+    # rgb_port = serial.Serial('/dev/ttyS0')
 
     rgb_piles = [
         {
@@ -66,7 +66,8 @@ def rgb_matrix(waypoint, bay_to_waypoint):
     rgb_piles[1]['color'] = waypoint[1]['color'].strip(
     ) if 'color' in waypoint[1].keys() else -1
     command = "%s\n" % dumps(rgb_piles)
-    rgb_port.write(command.encode())
+    server.sendMessage(command)
+    # rgb_port.write(command.encode())
 
 
 def available_ports():
@@ -227,7 +228,7 @@ def gps_frame_processor(line):
     if relative_frame and accuracy > 0:
         pre_heading = int.from_bytes(
             relative_frame[24:28], "little", signed=True)
-        if pre_heading > 100:        
+        if pre_heading > 100:
             rel_distance = int.from_bytes(
                 relative_frame[20:24], "little", signed=True)
             rel_heading = int.from_bytes(
@@ -235,7 +236,7 @@ def gps_frame_processor(line):
             week_timestamp = int.from_bytes(
                 relative_frame[4:8], "little", signed=False)
         print("rel_heading", rel_heading)
-        
+
     #     if compass_connected:
     #         print("compass:", compass_yaw)
     #         sleep(1)
@@ -310,6 +311,16 @@ def draw_square(XYdistances, Zdistance, scale=1):
     send_to_laser('{flash(1)}' if XYdistances['y'] < 5 else '{flash(0)}')
 
 
+def onStateChanged(state, msg):
+    if state == TCPServer.CONNECTED:
+        print("....device connected")
+
+
+def startServer():
+    global server
+    server = TCPServer(port, stateChanged=onStateChanged)
+
+
 Thread(target=connect_laser).start()
-# Thread(target=connect_compass).start()
+Thread(target=startServer).start()
 Thread(target=connect_gps).start()
