@@ -20,6 +20,7 @@ def is_rpi():
 url = 'http://localhost:9999'
 gps_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0" if is_rpi() else "/dev/ttyACM0"
 compass_path = "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0"
+laser_path = "/dev/ttyUSBLaser"
 
 laser_connected = False
 laser_port = None
@@ -98,7 +99,8 @@ def connect_laser():
     test_response = 'FIRMWARE'.encode()
     test_response2 = 'FRWR_ESO:163'.encode()
     while True:
-        ports = available_ports()
+        #ports = available_ports()
+        ports = [laser_path]
         for test_port in ports:
             print(test_port)
             try:
@@ -109,7 +111,7 @@ def connect_laser():
                 laser_port.write(test_command)
                 response = laser_port.readline()
                 print(response.decode())
-                if test_port == '/dev/ttyUSB0':
+                if test_port == '/dev/ttyUSBLaser':
                     laser_connected = True
                     print("... laser connected at:", test_port)
                     while laser_connected:
